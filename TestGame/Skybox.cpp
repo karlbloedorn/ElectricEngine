@@ -5,12 +5,13 @@ using namespace std;
 Skybox::Skybox()
 {
 	 glGenTextures(6, textures);
-	 Textures::SetupTexture(textures[0], "assets/Teide/negx.jpg", false);
-	 Textures::SetupTexture(textures[1], "assets/Teide/posy.jpg", false);
-	 Textures::SetupTexture(textures[2], "assets/Teide/negz.jpg", false);
-	 Textures::SetupTexture(textures[3], "assets/Teide/posx.jpg", false);
-	 Textures::SetupTexture(textures[4], "assets/Teide/negy.jpg", false);
-	 Textures::SetupTexture(textures[5], "assets/Teide/posz.jpg", false);
+
+	 Textures::SetupTexture(textures[0], "assets/textures/skybox/cloud/negx.jpg", false);
+	 Textures::SetupTexture(textures[1], "assets/textures/skybox/cloud/posy.jpg", false);
+	 Textures::SetupTexture(textures[2], "assets/textures/skybox/cloud/negz.jpg", false);
+	 Textures::SetupTexture(textures[3], "assets/textures/skybox/cloud/posx.jpg", false);
+	 Textures::SetupTexture(textures[4], "assets/textures/skybox/cloud/negy.jpg", false);
+	 Textures::SetupTexture(textures[5], "assets/textures/skybox/cloud/posz.jpg", false);
 }
 
 

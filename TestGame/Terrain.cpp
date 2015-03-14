@@ -5,7 +5,7 @@
 Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
 {
 	glGenTextures(1, &texture);
-	Textures::SetupTexture(texture, "assets/textures/130713 089x2 scb01.png", true);
+	Textures::SetupTexture(texture, "assets/textures/terrain/130713 089x2 scb01.png", true);
 
 	this->shader = new Shader();
 
@@ -127,23 +127,6 @@ Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
 		triangles[i].b.textureCoord.y = triangles[i].b.position.z / factor;
 		triangles[i].c.textureCoord.x = triangles[i].c.position.x / factor;
 		triangles[i].c.textureCoord.y = triangles[i].c.position.z / factor;
-
-		/*
-		auto a = glm::vec3(triangles[i].a.position.x, triangles[i].a.position.y, triangles[i].a.position.z);
-		auto b = glm::vec3(triangles[i].b.position.x, triangles[i].b.position.y, triangles[i].b.position.z);
-		auto c = glm::vec3(triangles[i].c.position.x, triangles[i].c.position.y, triangles[i].c.position.z);
-		auto normal = glm::cross(c - a, b - a);
-
-		triangles[i].a.normal.x = normal.x;
-		triangles[i].a.normal.y = normal.y;
-		triangles[i].a.normal.z = normal.z;
-		triangles[i].b.normal.x = normal.x;
-		triangles[i].b.normal.y = normal.y;
-		triangles[i].b.normal.z = normal.z;
-		triangles[i].c.normal.x = normal.x;
-		triangles[i].c.normal.y = normal.y;
-		triangles[i].c.normal.z = normal.z;
-		*/
 	}
 
 	delete[] heights;
@@ -155,6 +138,8 @@ Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, textureCoord));
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, normal));
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	delete[] triangles;
 }
 
 Terrain::~Terrain()
@@ -172,7 +157,6 @@ void Terrain::Render(float * modelview, float * projection)
 
 	glUniformMatrix4fv(this->shader->modelMatrix, 1, GL_FALSE, modelview);
 	glUniformMatrix4fv(this->shader->projectionMatrixLocation, 1, GL_FALSE, projection);
-	//glUniform1i(unf_texture, 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, numTriangles * 3);
 

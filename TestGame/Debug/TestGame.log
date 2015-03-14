@@ -1,24 +1,5 @@
-﻿Build started 2015-03-14 12:09:27 PM.
-     1>Project "C:\Users\Karl\Documents\GitHub\ElectricEngine\TestGame\TestGame.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Main.cpp
-         Main.cpp
-     1>c:\users\karl\documents\github\electricengine\testgame\main.cpp(70): warning C4305: 'argument' : truncation from 'double' to 'GLclampf'
-     1>c:\users\karl\documents\github\electricengine\testgame\main.cpp(112): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\karl\documents\github\electricengine\testgame\main.cpp(157): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\karl\documents\github\electricengine\testgame\main.cpp(221): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\karl\documents\github\electricengine\testgame\main.cpp(221): warning C4305: 'argument' : truncation from 'double' to 'float'
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Karl\Documents\GitHub\ElectricEngine\Debug\TestGame.exe" /INCREMENTAL /NOLOGO SDL2.lib SDL2main.lib SDL2test.lib SDL2_mixer.lib SDL2_ttf.lib opengl32.lib glew32.lib SDL2_image.lib libnoise.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Karl\Documents\GitHub\ElectricEngine\Debug\TestGame.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Karl\Documents\GitHub\ElectricEngine\Debug\TestGame.lib" /MACHINE:X86 Debug\Main.obj
-         Debug\Overlay.obj
-         Debug\Shader.obj
-         Debug\Skybox.obj
-         Debug\Terrain.obj
-         Debug\Textures.obj
-         Debug\Timings.obj
-         TestGame.vcxproj -> C:\Users\Karl\Documents\GitHub\ElectricEngine\Debug\TestGame.exe
-     1>Done Building Project "C:\Users\Karl\Documents\GitHub\ElectricEngine\TestGame\TestGame.vcxproj" (Build target(s)).
+﻿Build started 2015-03-14 6:44:28 PM.
 
 Build succeeded.
 
-Time Elapsed 00:00:00.78
+Time Elapsed 00:00:00.04

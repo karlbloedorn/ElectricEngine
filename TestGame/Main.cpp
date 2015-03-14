@@ -20,8 +20,8 @@
 
 using namespace std;
 
-int windowHeight = 1080;
-int windowWidth = 1920;
+int windowHeight = 768;
+int windowWidth = 1024;
 float cameraSpeed = 15.0f;
 glm::vec3 speedVector(0.0, 0.0, 0.0);
 float skyboxRotation = 0;
@@ -94,9 +94,9 @@ int main(int argc, char ** argv){
 	//Mix_PlayMusic(music, 1);
 
 	perlin =  new noise::module::Perlin();
-	perlin->SetOctaveCount(8);
-	perlin->SetFrequency(0.15);
-	terrain = new Terrain(500,500, perlin);
+	perlin->SetOctaveCount(2.2);
+	perlin->SetFrequency(0.25);
+	terrain = new Terrain(400,400, perlin);
 	timings = new Timings();
 	overlay = new Overlay();
 	skybox = new Skybox();
@@ -156,6 +156,7 @@ void gameloop(){
 		};
 		float groundlevel = 7 + perlin->GetValue(playerPosition.x / 25.5, 0, (playerPosition.z / 25.5)) * 15;
 
+
 		auto walkingVector = glm::vec3(0, 0, 0);
 		for (auto var : moveMap2)
 		{
@@ -210,7 +211,8 @@ void drawgame(){
 	auto bothRotate = xRotate * yRotate;
 	auto lookVector = bothRotate * glm::vec4(0, 0, 1, 0);
 
-	auto cameraPosition = playerPosition + glm::vec3(0, 3, 0);
+
+	auto cameraPosition = playerPosition + glm::vec3(0,4, 0);
 	auto lookat = glm::lookAt(cameraPosition, glm::vec3(lookVector) + cameraPosition, glm::vec3(0.0, 1.0, 0.0));
 
 // Broken	auto rotate = glm::rotate(lookat, skyboxRotation, glm::vec3(0, 1, 0));
@@ -232,14 +234,17 @@ void drawgame(){
 
 	terrain->Render(glm::value_ptr(lookat), glm::value_ptr(perspective));
 
+
 	glMatrixMode(GL_MODELVIEW);
 	auto skyboxPosition = glm::translate( playerPosition* glm::vec3(1,1,1));
 	auto combinedSkyboxMat = lookat*skyboxPosition;
 	glLoadMatrixf(glm::value_ptr(combinedSkyboxMat));
 	glEnable(GL_TEXTURE_2D);
+
 	skybox->Render();
 
 	// text
+	/*
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glOrtho(0, windowWidth, windowHeight, 0, -10, 10);
@@ -254,6 +259,6 @@ void drawgame(){
 	stringstream << "x: " << fixed << playerPosition.x << " y: " << fixed << playerPosition.y << " z: " << fixed << playerPosition.z;
 	overlay->Render(stringstream.str(), SDL_Color{ 255, 255, 255 }, 10, 10);
 	overlay->Render("Hello World", SDL_Color{ 255,255, 25 }, 10, 40);
-
+	*/
 	SDL_GL_SwapWindow(window);
 }
