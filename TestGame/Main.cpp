@@ -20,12 +20,14 @@
 
 using namespace std;
 
-int windowHeight = 1024;
-int windowWidth = 1280;
-float cameraSpeed = 5.0;
+int windowHeight = 1080;
+int windowWidth = 1920;
+float cameraSpeed = 15.0f;
+glm::vec3 speedVector(0.0, 0.0, 0.0);
 float skyboxRotation = 0;
-glm::vec3 cameraPosition = glm::vec3(284, 14,225);
+glm::vec3 playerPosition = glm::vec3(284, 14,225);
 glm::vec3 cameraRotation = glm::vec3(0, 0, 0);
+bool wireframe = false;
 
 enum class GameState { PLAY, EXIT };
 GameState curGameState = GameState::PLAY;
@@ -107,7 +109,7 @@ void gameloop(){
 
 	while (curGameState != GameState::EXIT){
 
-		float delta = timings->FrameUpdate();
+		float delta = timings->FrameUpdate() * 2.0;
 		//skyboxRotation += delta*10.0;
 		SDL_Event evnt;
 
@@ -119,16 +121,20 @@ void gameloop(){
 			case SDL_KEYDOWN:
 				switch (evnt.key.keysym.sym)
 				{
+				case SDLK_LSHIFT:
+					wireframe = !wireframe;
+					break;
 				case SDLK_ESCAPE:
 					curGameState = GameState::EXIT;
+					break;
 				case SDLK_1:
 					Mix_PlayChannel(-1, spellsound, 0);
 					break;
 				}
 				break;
 			case SDL_MOUSEMOTION:
-				cameraRotation.y += 0.1f * delta * evnt.motion.yrel;
-				cameraRotation.x -= 0.1f * delta* evnt.motion.xrel;
+				cameraRotation.y += 0.003f  * evnt.motion.yrel;
+				cameraRotation.x -= 0.003f * evnt.motion.xrel;
 				if (cameraRotation.y < degreesToRadians(-75)){
 					cameraRotation.y = degreesToRadians(-75);
 				}
@@ -146,31 +152,49 @@ void gameloop(){
 				{ SDL_SCANCODE_W, glm::vec3(0.0, 0.0, 1.0) },
 				{ SDL_SCANCODE_A, glm::vec3(1.0, 0.0, 0.0) },
 				{ SDL_SCANCODE_S, glm::vec3(0.0, 0.0, -1.0) },
-				{ SDL_SCANCODE_D, glm::vec3(-1.0, 0.0, 0.0) },
-				{ SDL_SCANCODE_Q, glm::vec3(0.0, 1.0, 0.0) },
-				{ SDL_SCANCODE_Z, glm::vec3(0.0, -1.0, 0.0) }
+				{ SDL_SCANCODE_D, glm::vec3(-1.0, 0.0, 0.0) }
 		};
-		for(auto var : moveMap2)
+		float groundlevel = 7 + perlin->GetValue(playerPosition.x / 25.5, 0, (playerPosition.z / 25.5)) * 15;
+
+		auto walkingVector = glm::vec3(0, 0, 0);
+		for (auto var : moveMap2)
 		{
 			if (keystates[var.first]){
-				moveVector += var.second;
+				walkingVector += var.second;
 			}
 		}
-		if (glm::length(moveVector) > 0){
-			auto normalizedMoveVector = glm::normalize(moveVector);
-			auto xRotate = glm::rotate(cameraRotation.x, glm::vec3(0, -1, 0));
-			auto movement = glm::vec4(normalizedMoveVector * delta * cameraSpeed, 0) * xRotate;
-		  auto proposed_location = cameraPosition + glm::vec3( movement);
-
-			// The user can go wherever they want currently.
-				bool xOkay = true;
-				bool yOkay = true;
-				bool zOkay = true;
-
-				cameraPosition += glm::vec3(xOkay ? movement.x : 0, yOkay ? movement.y : 0, zOkay ? movement.z : 0);
-				cameraPosition.y = 7 + perlin->GetValue(cameraPosition.x / 25.5, 0, (cameraPosition.z / 25.5)) * 15;
+		glm::vec3 normalizedWalkingVector = glm::vec3(0, 0, 0);
+		if (glm::length(walkingVector) > 0){
+			normalizedWalkingVector = glm::normalize(walkingVector);
 		}
-		drawgame();
+
+		if ((playerPosition.y - groundlevel) < 0.1){
+			if (keystates[SDL_SCANCODE_SPACE]){
+				speedVector.y = 150.0f; // fun // regular 50.0f;
+			}
+		
+		}	else {
+			speedVector.y -= 28.8f * delta;
+		}
+		moveVector.x = normalizedWalkingVector.x;
+		moveVector.z = normalizedWalkingVector.z;
+		moveVector.y += speedVector.y * delta;
+
+		
+		auto xRotate = glm::rotate(cameraRotation.x, glm::vec3(0, -1, 0));
+		auto movement = glm::vec4(moveVector * delta * cameraSpeed, 0) * xRotate;
+		auto proposed_location = playerPosition + glm::vec3( movement);
+
+			bool xOkay = true;
+			bool yOkay = true;
+			bool zOkay = true;
+				
+			playerPosition += glm::vec3(xOkay ? movement.x : 0, yOkay ? movement.y : 0, zOkay ? movement.z : 0);
+			if ((proposed_location.y) < groundlevel){
+				playerPosition.y = groundlevel;
+				speedVector.y = 0;
+			}
+			drawgame();
 	}
 }
 
@@ -185,6 +209,8 @@ void drawgame(){
 	auto yRotate = glm::rotate(cameraRotation.y, glm::vec3(1, 0, 0));
 	auto bothRotate = xRotate * yRotate;
 	auto lookVector = bothRotate * glm::vec4(0, 0, 1, 0);
+
+	auto cameraPosition = playerPosition + glm::vec3(0, 3, 0);
 	auto lookat = glm::lookAt(cameraPosition, glm::vec3(lookVector) + cameraPosition, glm::vec3(0.0, 1.0, 0.0));
 
 // Broken	auto rotate = glm::rotate(lookat, skyboxRotation, glm::vec3(0, 1, 0));
@@ -197,15 +223,17 @@ void drawgame(){
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glDisable(GL_TEXTURE_2D);
-	glPolygonMode(GL_FRONT, GL_FILL);
-
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	if (wireframe){
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 
 	terrain->Render(glm::value_ptr(lookat), glm::value_ptr(perspective));
 
 	glMatrixMode(GL_MODELVIEW);
-	auto skyboxPosition = glm::translate( cameraPosition* glm::vec3(1,1,1));
+	auto skyboxPosition = glm::translate( playerPosition* glm::vec3(1,1,1));
 	auto combinedSkyboxMat = lookat*skyboxPosition;
 	glLoadMatrixf(glm::value_ptr(combinedSkyboxMat));
 	glEnable(GL_TEXTURE_2D);
@@ -223,7 +251,7 @@ void drawgame(){
 
 	std::stringstream stringstream;
 	stringstream.precision(2);
-	stringstream << "x: " << fixed << cameraPosition.x << " y: " << fixed << cameraPosition.y << " z: " << fixed << cameraPosition.z;
+	stringstream << "x: " << fixed << playerPosition.x << " y: " << fixed << playerPosition.y << " z: " << fixed << playerPosition.z;
 	overlay->Render(stringstream.str(), SDL_Color{ 255, 255, 255 }, 10, 10);
 	overlay->Render("Hello World", SDL_Color{ 255,255, 25 }, 10, 40);
 

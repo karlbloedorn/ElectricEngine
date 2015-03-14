@@ -7,7 +7,7 @@ in vec3 pass_Normal;
 //out vec4 gl_FragColor; implied
 
 const vec3 lightPos = vec3(1.0,1.0,1.0);
-const vec4 ambientColor = vec4(0.2, 0.2, 0.2,1.0);
+const vec4 ambientColor = vec4(0.3, 0.3, 0.3,1.0);
 const vec4 diffuseColor = vec4(0.5, 0.5, 0.5,1.0);
 const vec4 specColor = vec4(1.0, 1.0, 1.0,1.0);
 
@@ -23,9 +23,4 @@ void main()
     ct = texel.rgb;
     at = texel.a;
     gl_FragColor = vec4(ct * cf, at * af);	
-
-	//vec4 color = texture2D(texture, pass_Texture);
-	//float brightness = (0.55)*pass_Position.y / 25.0;
-	//float offset = 0.45;
-    //gl_FragColor = vec4( color.r * brightness  +offset, color.g * brightness +offset, color.b * brightness +offset, color.a);
 }

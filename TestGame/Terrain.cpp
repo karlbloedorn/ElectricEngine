@@ -38,10 +38,13 @@ Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
 	for (int x = 1; x < xSize; x++){
 		for (int z = 1; z < zSize; z++){
 			//given x and z, get the 4 normals
-			auto v1 = glm::vec3(-1, heightArray(zSize + 1, x-1,z), 0);
-			auto v2 = glm::vec3(0, heightArray(zSize + 1, x, z-1), -1);
-			auto v3 = glm::vec3(1, heightArray(zSize + 1, x+1, z), 0);
-			auto v4 = glm::vec3(0, heightArray(zSize + 1, x, z+1), 1);
+
+			float heightMain = heightArray(zSize + 1, x, z);
+
+				auto v1 = glm::vec3(-1, heightMain- heightArray(zSize + 1, x - 1, z), 0);
+			auto v2 = glm::vec3(0, heightMain-heightArray(zSize + 1, x, z - 1), -1);
+			auto v3 = glm::vec3(1, heightMain- heightArray(zSize + 1, x + 1, z), 0);
+			auto v4 = glm::vec3(0, heightMain- heightArray(zSize + 1, x, z + 1), 1);
 
 			auto v12 = glm::cross(v2, v1);
 			auto v23 = glm::cross(v3, v2);
