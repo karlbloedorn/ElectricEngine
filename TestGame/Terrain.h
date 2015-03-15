@@ -5,31 +5,7 @@
 #include "Shader.h"
 #include "Textures.h"
 #include <glm/glm.hpp>
-
-struct Vertex{
-	struct Position{
-		float x;
-		float y;
-		float z;
-	} position;
-
-	struct TextureCoord{
-		float x;
-		float y;
-	} textureCoord;
-
-	struct Normal{
-		float x;
-		float y;
-		float z;
-	} normal;
-};
-
-struct Triangle{
-	Vertex a;
-	Vertex b;
-	Vertex c;
-};
+#include "Geometry.h"
 
 class Terrain
 {

@@ -2,15 +2,27 @@
 
 Timings::Timings()
 {
-	old_time = SDL_GetTicks();
+	lastFrameTime = SDL_GetTicks();
+	lastFootstepTime = SDL_GetTicks();
 }
 
 float Timings::FrameUpdate()
 {
-	auto current_time = SDL_GetTicks();
-	auto delta = (current_time - old_time) / 1000.0f;
-	old_time = current_time;
+	auto currentTime = SDL_GetTicks();
+	auto delta = (currentTime - lastFrameTime) / 1000.0f;
+	lastFrameTime = currentTime;
 	return delta;
+}
+
+bool Timings::CanPlayFootstep()
+{
+	auto currentTime = SDL_GetTicks();
+	if ((currentTime - lastFootstepTime) > 350){
+		lastFootstepTime = SDL_GetTicks();
+		return true;
+	} 
+	return false;
+
 }
 
 Timings::~Timings()

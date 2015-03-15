@@ -7,7 +7,10 @@ public:
 	Timings();
 	~Timings();
 	float FrameUpdate();
+	bool CanPlayFootstep();
+
 private:
-	unsigned int old_time;
+	unsigned int lastFrameTime;
+	unsigned int lastFootstepTime;
 };
 

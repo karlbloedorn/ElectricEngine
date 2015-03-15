@@ -41,7 +41,7 @@ Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
 
 			float heightMain = heightArray(zSize + 1, x, z);
 
-				auto v1 = glm::vec3(-1, heightMain- heightArray(zSize + 1, x - 1, z), 0);
+			auto v1 = glm::vec3(-1, heightMain- heightArray(zSize + 1, x - 1, z), 0);
 			auto v2 = glm::vec3(0, heightMain-heightArray(zSize + 1, x, z - 1), -1);
 			auto v3 = glm::vec3(1, heightMain- heightArray(zSize + 1, x + 1, z), 0);
 			auto v4 = glm::vec3(0, heightMain- heightArray(zSize + 1, x, z + 1), 1);
@@ -134,9 +134,7 @@ Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, numTriangles * sizeof(Triangle), triangles, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, position));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, textureCoord));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, normal));
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	delete[] triangles;
@@ -149,20 +147,16 @@ Terrain::~Terrain()
 
 void Terrain::Render(float * modelview, float * projection)
 {
-
 	glBindTexture(GL_TEXTURE_2D, texture);
-
 	this->shader->EnableShader();
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
 	glUniformMatrix4fv(this->shader->modelMatrix, 1, GL_FALSE, modelview);
 	glUniformMatrix4fv(this->shader->projectionMatrixLocation, 1, GL_FALSE, projection);
-
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, position));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, textureCoord));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, normal));
 	glDrawArrays(GL_TRIANGLES, 0, numTriangles * 3);
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	this->shader->DisableShader();
-
 	glBindTexture(GL_TEXTURE_2D, 0);
-
 }

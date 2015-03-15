@@ -17,28 +17,34 @@
 #include "Skybox.h"
 #include "Terrain.h"
 #include "Shader.h"
+#include "SceneryItem.h"
 
 using namespace std;
 
-int windowHeight = 768;
-int windowWidth = 1024;
+int windowHeight = 900;
+int windowWidth = 1800;
 float cameraSpeed = 15.0f;
 glm::vec3 speedVector(0.0, 0.0, 0.0);
 float skyboxRotation = 0;
-glm::vec3 playerPosition = glm::vec3(284, 14,225);
+glm::vec3 playerPosition = glm::vec3(205, 14,205);
 glm::vec3 cameraRotation = glm::vec3(0, 0, 0);
 bool wireframe = false;
 
 enum class GameState { PLAY, EXIT };
 GameState curGameState = GameState::PLAY;
 SDL_Window * window;
-Mix_Chunk * spellsound;
+Mix_Chunk * jumpSound;
+Mix_Chunk * landSound;
+Mix_Chunk * footstepSound;
+
 Timings * timings;
 Overlay * overlay;
 Skybox * skybox;
 Terrain * terrain;
 Shader * terrainShader;
 noise::module::Perlin * perlin;
+
+SceneryItem * testTree;
 
 void processinput();
 void gameloop();
@@ -69,7 +75,7 @@ int main(int argc, char ** argv){
 
 	glClearColor(0.1,0.1,0.1,1.0);
 
-	if (Mix_Init(MIX_INIT_MP3) != MIX_INIT_MP3){
+	if (Mix_Init(MIX_INIT_OGG) != MIX_INIT_OGG){
 		printf("failed to init mp3");
 		exit(1);
 	}
@@ -78,6 +84,25 @@ int main(int argc, char ** argv){
 		printf("Mix_OpenAudio %s\n", Mix_GetError());
 		exit(1);
 	}
+
+	jumpSound = Mix_LoadWAV("assets/sounds/bodyimpact_jack_01.wav");
+	if (!jumpSound) {
+		printf("Mix_LoadWAV %s\n", Mix_GetError());
+		exit(1);
+	}
+
+	landSound = Mix_LoadWAV("assets/sounds/land.wav");
+	if (!landSound) {
+		printf("Mix_LoadWAV %s\n", Mix_GetError());
+		exit(1);
+	}
+	footstepSound = Mix_LoadWAV("assets/sounds/Fantozzi-SandR1.ogg");
+	footstepSound->volume = 5;
+	if (!footstepSound) {
+		printf("Mix_LoadWAV %s\n", Mix_GetError());
+		exit(1);
+	}
+
 	/*
 	auto music = Mix_LoadMUS("assets/TownTheme.mp3");
 	if (!music) {
@@ -85,11 +110,7 @@ int main(int argc, char ** argv){
 		exit(1);
 	}
 
-	spellsound = Mix_LoadWAV("assets/MagicSmite.wav");
-	if (!spellsound) {
-		printf("Mix_LoadWAV %s\n", Mix_GetError());
-		exit(1);
-	}*/
+*/
 
 	//Mix_PlayMusic(music, 1);
 
@@ -101,6 +122,10 @@ int main(int argc, char ** argv){
 	overlay = new Overlay();
 	skybox = new Skybox();
 
+
+	testTree = new SceneryItem();
+	testTree->LoadFromObj("assets/meshes/palm_tree_lowpoly.obj");
+
 	gameloop();
 	return 0;
 }
@@ -110,7 +135,7 @@ void gameloop(){
 	while (curGameState != GameState::EXIT){
 
 		float delta = timings->FrameUpdate() * 2.0;
-		//skyboxRotation += delta*10.0;
+		skyboxRotation += delta*0.005;
 		SDL_Event evnt;
 
 		while (SDL_PollEvent(&evnt)){
@@ -126,9 +151,6 @@ void gameloop(){
 					break;
 				case SDLK_ESCAPE:
 					curGameState = GameState::EXIT;
-					break;
-				case SDLK_1:
-					Mix_PlayChannel(-1, spellsound, 0);
 					break;
 				}
 				break;
@@ -164,16 +186,18 @@ void gameloop(){
 				walkingVector += var.second;
 			}
 		}
+
+		bool moving = false;
 		glm::vec3 normalizedWalkingVector = glm::vec3(0, 0, 0);
 		if (glm::length(walkingVector) > 0){
 			normalizedWalkingVector = glm::normalize(walkingVector);
+			moving = true;
 		}
-
 		if ((playerPosition.y - groundlevel) < 0.1){
 			if (keystates[SDL_SCANCODE_SPACE]){
-				speedVector.y = 150.0f; // fun // regular 50.0f;
+				Mix_PlayChannel(-1, jumpSound, 0);
+				speedVector.y = 30; // 150.0f; // fun // regular 50.0f;
 			}
-		
 		}	else {
 			speedVector.y -= 28.8f * delta;
 		}
@@ -181,7 +205,6 @@ void gameloop(){
 		moveVector.z = normalizedWalkingVector.z;
 		moveVector.y += speedVector.y * delta;
 
-		
 		auto xRotate = glm::rotate(cameraRotation.x, glm::vec3(0, -1, 0));
 		auto movement = glm::vec4(moveVector * delta * cameraSpeed, 0) * xRotate;
 		auto proposed_location = playerPosition + glm::vec3( movement);
@@ -191,10 +214,16 @@ void gameloop(){
 			bool zOkay = true;
 				
 			playerPosition += glm::vec3(xOkay ? movement.x : 0, yOkay ? movement.y : 0, zOkay ? movement.z : 0);
-			if ((proposed_location.y) < groundlevel){
+			if ( (proposed_location.y - groundlevel) < 0.1){
 				playerPosition.y = groundlevel;
 				speedVector.y = 0;
+
+				if (moving && timings->CanPlayFootstep()){
+					Mix_PlayChannel(-1, footstepSound, 0);
+				}
+
 			}
+
 			drawgame();
 	}
 }
@@ -211,11 +240,8 @@ void drawgame(){
 	auto bothRotate = xRotate * yRotate;
 	auto lookVector = bothRotate * glm::vec4(0, 0, 1, 0);
 
-
 	auto cameraPosition = playerPosition + glm::vec3(0,4, 0);
 	auto lookat = glm::lookAt(cameraPosition, glm::vec3(lookVector) + cameraPosition, glm::vec3(0.0, 1.0, 0.0));
-
-// Broken	auto rotate = glm::rotate(lookat, skyboxRotation, glm::vec3(0, 1, 0));
 
 	glLoadMatrixf(glm::value_ptr(lookat));
 	glMatrixMode(GL_PROJECTION);
@@ -225,6 +251,7 @@ void drawgame(){
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
+
 	if (wireframe){
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
@@ -235,10 +262,20 @@ void drawgame(){
 	terrain->Render(glm::value_ptr(lookat), glm::value_ptr(perspective));
 
 
+
+	auto scaled = glm::scale(lookat, glm::vec3(0.1, 0.1, 0.1));
+	testTree->Render(glm::value_ptr(scaled), glm::value_ptr(perspective));
+	auto moved = glm::translate(scaled, glm::vec3(250, 0.1, 250));
+
+	testTree->Render(glm::value_ptr(moved), glm::value_ptr(perspective));
+
+
 	glMatrixMode(GL_MODELVIEW);
 	auto skyboxPosition = glm::translate( playerPosition* glm::vec3(1,1,1));
 	auto combinedSkyboxMat = lookat*skyboxPosition;
-	glLoadMatrixf(glm::value_ptr(combinedSkyboxMat));
+	auto rotate = glm::rotate(combinedSkyboxMat, skyboxRotation, glm::vec3(0, 1, 0));
+
+	glLoadMatrixf(glm::value_ptr(rotate));
 	glEnable(GL_TEXTURE_2D);
 
 	skybox->Render();
