@@ -21,13 +21,13 @@
 
 using namespace std;
 
-int windowHeight = 900;
-int windowWidth = 1800;
+int windowHeight = 1080;
+int windowWidth = 1920;
 float cameraSpeed = 15.0f;
 glm::vec3 speedVector(0.0, 0.0, 0.0);
 float skyboxRotation = 0;
-glm::vec3 playerPosition = glm::vec3(205, 14,205);
-glm::vec3 cameraRotation = glm::vec3(0, 0, 0);
+glm::vec3 playerPosition = glm::vec3(200, 10.3822203, 200.0);
+glm::vec3 cameraRotation = glm::vec3(3.25501370, -0.114001535, 0);
 bool wireframe = false;
 
 enum class GameState { PLAY, EXIT };
@@ -44,16 +44,21 @@ Terrain * terrain;
 Shader * terrainShader;
 noise::module::Perlin * perlin;
 
-SceneryItem * testTree;
+SceneryItem * rocks;
+vector<glm::vec3> rockPositions;
 
 void processinput();
 void gameloop();
 void drawgame();
 
+float groundLevel(float x, float z){
+	return 5 + perlin->GetValue(x / 25.5, 0, (z / 25.5)) * 15;
+}
+
 int main(int argc, char ** argv){
 	SDL_Init(SDL_INIT_EVERYTHING);
 
-	window = SDL_CreateWindow("Test Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_OPENGL);// | SDL_WINDOW_FULLSCREEN);
+	window = SDL_CreateWindow("Test Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 	if (window == nullptr){
 		printf("SDL_CreateWindow failed");
 		exit(1);
@@ -102,6 +107,8 @@ int main(int argc, char ** argv){
 		printf("Mix_LoadWAV %s\n", Mix_GetError());
 		exit(1);
 	}
+	rocks = new SceneryItem();
+	rocks->LoadFromObj("assets/meshes/rock/", "rock01.obj");
 
 	/*
 	auto music = Mix_LoadMUS("assets/TownTheme.mp3");
@@ -111,7 +118,6 @@ int main(int argc, char ** argv){
 	}
 
 */
-
 	//Mix_PlayMusic(music, 1);
 
 	perlin =  new noise::module::Perlin();
@@ -122,9 +128,12 @@ int main(int argc, char ** argv){
 	overlay = new Overlay();
 	skybox = new Skybox();
 
-
-	testTree = new SceneryItem();
-	testTree->LoadFromObj("assets/meshes/palm_tree_lowpoly.obj");
+	for (int i = 0; i < 100;i++){
+		float r1 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 380))+10;
+		float r2 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 380))+10;
+		float level = groundLevel(r1-3.33, r2+1);
+		rockPositions.push_back(glm::vec3(r1, level-7.1, r2));
+	}
 
 	gameloop();
 	return 0;
@@ -176,7 +185,7 @@ void gameloop(){
 				{ SDL_SCANCODE_S, glm::vec3(0.0, 0.0, -1.0) },
 				{ SDL_SCANCODE_D, glm::vec3(-1.0, 0.0, 0.0) }
 		};
-		float groundlevel = 7 + perlin->GetValue(playerPosition.x / 25.5, 0, (playerPosition.z / 25.5)) * 15;
+		float groundLevelAtPos = groundLevel(playerPosition.x, playerPosition.z);
 
 
 		auto walkingVector = glm::vec3(0, 0, 0);
@@ -193,7 +202,7 @@ void gameloop(){
 			normalizedWalkingVector = glm::normalize(walkingVector);
 			moving = true;
 		}
-		if ((playerPosition.y - groundlevel) < 0.1){
+		if ((playerPosition.y - groundLevelAtPos) < 0.1){
 			if (keystates[SDL_SCANCODE_SPACE]){
 				Mix_PlayChannel(-1, jumpSound, 0);
 				speedVector.y = 30; // 150.0f; // fun // regular 50.0f;
@@ -214,8 +223,8 @@ void gameloop(){
 			bool zOkay = true;
 				
 			playerPosition += glm::vec3(xOkay ? movement.x : 0, yOkay ? movement.y : 0, zOkay ? movement.z : 0);
-			if ( (proposed_location.y - groundlevel) < 0.1){
-				playerPosition.y = groundlevel;
+			if ((proposed_location.y - groundLevelAtPos) < 0.1){
+				playerPosition.y = groundLevelAtPos;
 				speedVector.y = 0;
 
 				if (moving && timings->CanPlayFootstep()){
@@ -225,6 +234,10 @@ void gameloop(){
 			}
 
 			drawgame();
+			GLenum err;
+			while ((err = glGetError()) != GL_NO_ERROR) {
+				std::cout << "OpenGL error: " << err << endl;
+			}
 	}
 }
 
@@ -260,15 +273,10 @@ void drawgame(){
 	}
 
 	terrain->Render(glm::value_ptr(lookat), glm::value_ptr(perspective));
-
-
-
-	auto scaled = glm::scale(lookat, glm::vec3(0.1, 0.1, 0.1));
-	testTree->Render(glm::value_ptr(scaled), glm::value_ptr(perspective));
-	auto moved = glm::translate(scaled, glm::vec3(250, 0.1, 250));
-
-	testTree->Render(glm::value_ptr(moved), glm::value_ptr(perspective));
-
+	for (auto rockPosition : rockPositions){
+		auto moved = glm::translate(lookat, rockPosition);
+		rocks->Render(glm::value_ptr(moved), glm::value_ptr(perspective));
+	}
 
 	glMatrixMode(GL_MODELVIEW);
 	auto skyboxPosition = glm::translate( playerPosition* glm::vec3(1,1,1));

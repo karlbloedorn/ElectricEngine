@@ -1,7 +1,6 @@
 #version 130
 
 uniform sampler2D texture;
-in vec3 pass_Position;
 in vec2 pass_Texture;
 in vec3 pass_Normal;
 //out vec4 gl_FragColor; implied

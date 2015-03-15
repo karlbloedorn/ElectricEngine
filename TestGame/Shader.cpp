@@ -30,12 +30,13 @@ bool Shader::SetupShader(const string & vertexPath, const string & fragmentPath,
 		printf("error: failed to compile a shader\n");
 		return false;
 	}
+	programID = glCreateProgram();
+
 	// Add the attributes
 	for(string attributeName : attributes){
 		glBindAttribLocation(programID, numAttributes++, attributeName.c_str());
 	}
 	// Link the shaders and create program
-	programID = glCreateProgram();
 	glAttachShader(programID, vertexShaderID);
 	glAttachShader(programID, fragmentShaderID);
 	glLinkProgram(programID);
