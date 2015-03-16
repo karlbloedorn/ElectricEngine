@@ -33,6 +33,10 @@ void Textures::SetupTexture(GLuint texture, string filePath, bool allowWrap){
 				textureFormat = GL_RGB;
 			break;
 	}
+
+		//SDL_SaveBMP(surface, "test.bmp");
+
+
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

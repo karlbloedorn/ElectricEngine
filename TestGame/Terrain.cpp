@@ -27,16 +27,16 @@ Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
 	float * heights = new float[ (xSize + 1 ) * (zSize+1)];
 	for (int x = 0; x < xSize+1; x++){
 		for (int z = 0; z < zSize+1; z++){
-			auto height = 5 + perlin->GetValue(x /25.5, 0, (z /25.5))*15;
-			heights[x*zSize + z] = height;// height;
+			auto height = 55 + perlin->GetValue(x /25.5, 0, (z /25.5))*15;
+			heights[x*zSize + z] =  height;// height;
 		}
 	}
 
 	glm::vec3 * normals = new glm::vec3[(xSize+1)  * ( zSize +1)];
 
 	//http://www.lighthouse3d.com/opengl/terrain/tnormals.gif see this for logic
-	for (int x = 1; x < xSize; x++){
-		for (int z = 1; z < zSize; z++){
+	for (int x = 1; x < xSize+1; x++){
+		for (int z = 1; z < zSize+1; z++){
 			//given x and z, get the 4 normals
 
 			float heightMain = heightArray(zSize + 1, x, z);
@@ -61,9 +61,9 @@ Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
 	triangles = new Triangle[numTriangles];
 
 	int index = 0;
-	for (int x = 0; x < xSize; x++){
-		for (int z = 0; z < zSize; z++){
-
+	for (int x = 0; x < xSize-2; x++){
+		for (int z = 0; z < xSize-2; z++){
+		
 			triangles[index].a.position.x = x;
 			triangles[index].a.position.y = heightArray(zSize + 1, x, z);
 			triangles[index].a.position.z = z;
@@ -71,7 +71,7 @@ Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
 			triangles[index].b.position.x = x + 1;
 			triangles[index].b.position.y = heightArray(zSize + 1, x + 1, z);
 			triangles[index].b.position.z = z;
-
+			
 			triangles[index].c.position.x = x + 1;
 			triangles[index].c.position.y = heightArray(zSize + 1, x + 1, z + 1);
 			triangles[index].c.position.z = z + 1;
@@ -93,11 +93,11 @@ Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
 			triangles[index].a.position.x = x;
 			triangles[index].a.position.y = heightArray(zSize + 1, x, z);
 			triangles[index].a.position.z = z;
-
+		
 			triangles[index].b.position.x = x + 1;
 			triangles[index].b.position.y = heightArray(zSize + 1, x + 1, z + 1);
 			triangles[index].b.position.z = z + 1;
-
+			
 			triangles[index].c.position.x = x;
 			triangles[index].c.position.y = heightArray(zSize + 1, x, z + 1);
 			triangles[index].c.position.z = z + 1;
@@ -134,7 +134,6 @@ Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, numTriangles * sizeof(Triangle), triangles, GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	delete[] triangles;

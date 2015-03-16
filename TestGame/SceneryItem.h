@@ -11,7 +11,7 @@ public:
 	SceneryItem();
 	~SceneryItem();
 	Triangle * triangles;
-	bool LoadFromObj(string basePath, string filePath);
+	bool LoadFromObj(string basePath, string filePath, string forceTexture);
 	int numTriangles;
 	void Render(float * modelview, float * projection);
 private:
