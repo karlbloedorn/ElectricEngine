@@ -21,8 +21,9 @@
 
 using namespace std;
 
-int windowHeight = 800;
-int windowWidth = 1920;
+
+int windowHeight = 500;
+int windowWidth = 800;
 float cameraSpeed = 15.0f;
 glm::vec3 speedVector(0.0, 0.0, 0.0);
 float skyboxRotation = 0;
@@ -123,7 +124,7 @@ int main(int argc, char ** argv){
 	perlin =  new noise::module::Perlin();
 	perlin->SetOctaveCount(2);
 	perlin->SetFrequency(0.25);
-	int width = 1000;
+	int width = 50;
 	terrain = new Terrain(width, width, perlin);
 	timings = new Timings();
 	overlay = new Overlay();
@@ -140,13 +141,13 @@ int main(int argc, char ** argv){
 	//weeds->LoadFromObj("assets/meshes/thistle/", "thistle.obj", "diffuse.tga");
 
 
-	for (int i = 0; i < 400;i++){
+	for (int i = 0; i < 2;i++){
 		float r1 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (width*0.9))) + (width*0.05);
 		float r2 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (width*0.9))) + (width*0.05);
 		float level = groundLevel(r1-3.33, r2+1);
 		rockPositions.push_back(glm::vec3(r1, level-7.1, r2));		
 	}
-	for (int i = 0; i < 105; i++){
+	for (int i = 0; i < 2; i++){
 
 		float r1 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (width*0.9))) + (width*0.05);
 		float r2 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX /( width*0.9))) + (width*0.05);
@@ -164,7 +165,7 @@ void gameloop(){
 	while (curGameState != GameState::EXIT){
 
 		float delta = timings->FrameUpdate() * 2.0;
-		skyboxRotation += delta*0.005;
+		skyboxRotation += delta*0.006;
 		SDL_Event evnt;
 
 		while (SDL_PollEvent(&evnt)){
@@ -206,8 +207,6 @@ void gameloop(){
 				{ SDL_SCANCODE_D, glm::vec3(-1.0, 0.0, 0.0) }
 		};
 		float groundLevelAtPos = groundLevel(playerPosition.x, playerPosition.z);
-
-
 		auto walkingVector = glm::vec3(0, 0, 0);
 		for (auto var : moveMap2)
 		{
@@ -222,6 +221,7 @@ void gameloop(){
 			normalizedWalkingVector = glm::normalize(walkingVector);
 			moving = true;
 		}
+
 		if ((playerPosition.y - groundLevelAtPos) < 0.1){
 			if (keystates[SDL_SCANCODE_SPACE]){
 				Mix_PlayChannel(-1, jumpSound, 0);
@@ -238,26 +238,24 @@ void gameloop(){
 		auto movement = glm::vec4(moveVector * delta * cameraSpeed, 0) * xRotate;
 		auto proposed_location = playerPosition + glm::vec3( movement);
 
-			bool xOkay = true;
-			bool yOkay = true;
-			bool zOkay = true;
+		bool xOkay = true;
+		bool yOkay = true;
+		bool zOkay = true;
 				
-			playerPosition += glm::vec3(xOkay ? movement.x : 0, yOkay ? movement.y : 0, zOkay ? movement.z : 0);
-			if ((proposed_location.y - groundLevelAtPos) < 0.1){
-				playerPosition.y = groundLevelAtPos;
-				speedVector.y = 0;
-
-				if (moving && timings->CanPlayFootstep()){
-					Mix_PlayChannel(-1, footstepSound, 0);
-				}
-
+		playerPosition += glm::vec3(xOkay ? movement.x : 0, yOkay ? movement.y : 0, zOkay ? movement.z : 0);
+		if ((proposed_location.y - groundLevelAtPos) < 0.1){
+			playerPosition.y = groundLevelAtPos;
+			speedVector.y = 0;
+			if (moving && timings->CanPlayFootstep()){
+				Mix_PlayChannel(-1, footstepSound, 0);
 			}
+		}
 
-			drawgame();
-			GLenum err;
-			while ((err = glGetError()) != GL_NO_ERROR) {
-				std::cout << "OpenGL error: " << err << endl;
-			}
+		drawgame();
+		GLenum err;
+		while ((err = glGetError()) != GL_NO_ERROR) {
+			std::cout << "OpenGL error: " << err << endl;
+		}
 	}
 }
 
@@ -281,6 +279,11 @@ void drawgame(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glAlphaFunc(GL_GREATER, 0.1);
 
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	auto perspective = glm::perspectiveFov<float>(1.27, windowWidth, windowHeight, 0.1f, 5000.0f);
+	glLoadMatrixf(glm::value_ptr(perspective));
+
 	glMatrixMode(GL_MODELVIEW);
 	auto skyboxPosition = glm::translate(playerPosition* glm::vec3(1, 1, 1));
 	auto combinedSkyboxMat = lookat*skyboxPosition;
@@ -289,15 +292,11 @@ void drawgame(){
 	glLoadMatrixf(glm::value_ptr(rotate));
 	glEnable(GL_TEXTURE_2D);
 
-	glLoadMatrixf(glm::value_ptr(lookat));
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	auto perspective = glm::perspectiveFov<float>(1.27, windowWidth, windowHeight, 0.1f, 5000.0f);
-	glLoadMatrixf(glm::value_ptr(perspective));
 
 	skybox->Render();
 
-	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(glm::value_ptr(lookat));
+
 	glLoadIdentity();
 
 	if (wireframe){
@@ -308,6 +307,7 @@ void drawgame(){
 	}
 
 	terrain->Render(glm::value_ptr(lookat), glm::value_ptr(perspective));
+
 	for (auto rockPosition : rockPositions){
 		auto movedRock = glm::translate(lookat, rockPosition);
 		//auto scaledRock = glm::scale(movedRock, glm::vec3(4.0, 4.0, 4.0));

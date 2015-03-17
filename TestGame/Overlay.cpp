@@ -43,6 +43,6 @@ void Overlay::Render(std::string text, SDL_Color color, int x, int y)
 		glTexCoord2f(0, 1); glVertex2f(x, y + sFont->h);
 	}
 	glEnd();
-
+	glDeleteTextures(1, &texture);
 	SDL_FreeSurface(sFont);
 }

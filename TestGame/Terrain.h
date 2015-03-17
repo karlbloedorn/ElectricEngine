@@ -6,20 +6,19 @@
 #include "Textures.h"
 #include <glm/glm.hpp>
 #include "Geometry.h"
+#include "Chunk.h"
+#include <list>
 
 class Terrain
 {
 public:
-	int xSize;
-	int zSize;
-	int numTriangles;
-	Triangle * triangles;
 	Terrain(int xSize, int zSize, noise::module::Perlin * noise);
 	~Terrain();
 	void Render(float * modelview, float * projection);
+	std::list< glm::ivec3 > Terrain::Near(glm::vec3 position, int distance);
 private:
 	Shader * shader;
-	GLuint vbo;
 	GLuint texture;
+	std::list< Chunk * > loadedChunks;
 };
 
