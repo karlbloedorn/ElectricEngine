@@ -74,6 +74,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="deps\static\tiny_obj_loader.cc" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Overlay.cpp" />
@@ -85,6 +86,7 @@
     <ClCompile Include="Timings.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Chunk.h" />
     <ClInclude Include="deps\static\tiny_obj_loader.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="Overlay.h" />

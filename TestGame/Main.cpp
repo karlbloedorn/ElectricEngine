@@ -274,6 +274,13 @@ void drawgame(){
 	auto lookat = glm::lookAt(cameraPosition, glm::vec3(lookVector) + cameraPosition, glm::vec3(0.0, 1.0, 0.0));
 
 
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_ALPHA_TEST);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glAlphaFunc(GL_GREATER, 0.1);
+
 	glMatrixMode(GL_MODELVIEW);
 	auto skyboxPosition = glm::translate(playerPosition* glm::vec3(1, 1, 1));
 	auto combinedSkyboxMat = lookat*skyboxPosition;
@@ -282,26 +289,16 @@ void drawgame(){
 	glLoadMatrixf(glm::value_ptr(rotate));
 	glEnable(GL_TEXTURE_2D);
 
-	skybox->Render();
-
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-
-
 	glLoadMatrixf(glm::value_ptr(lookat));
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	auto perspective = glm::perspectiveFov<float>(1.27, windowWidth, windowHeight, 0.1f, 5000.0f);
 	glLoadMatrixf(glm::value_ptr(perspective));
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_ALPHA_TEST);
+	skybox->Render();
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glAlphaFunc(GL_GREATER, 0.1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
 	if (wireframe){
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -330,7 +327,7 @@ void drawgame(){
 	*/
 
 	// text
-	/*
+	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glOrtho(0, windowWidth, windowHeight, 0, -10, 10);
@@ -345,6 +342,6 @@ void drawgame(){
 	stringstream << "x: " << fixed << playerPosition.x << " y: " << fixed << playerPosition.y << " z: " << fixed << playerPosition.z;
 	overlay->Render(stringstream.str(), SDL_Color{ 255, 255, 255 }, 10, 10);
 	overlay->Render("Hello World", SDL_Color{ 255,255, 25 }, 10, 40);
-	*/
+	
 	SDL_GL_SwapWindow(window);
 }
