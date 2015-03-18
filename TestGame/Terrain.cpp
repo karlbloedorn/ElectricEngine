@@ -2,7 +2,7 @@
 #define heightArray(WIDTH, r, c) (heights[(r)*WIDTH + (c)])
 #define normalArray(WIDTH, r, c) (normals[(r)*WIDTH + (c)])
 
-Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
+Terrain::Terrain(noise::module::Perlin * perlin)
 {
 	glGenTextures(1, &texture);
 	Textures::SetupTexture(texture, "assets/textures/terrain/130713 089x2 scb01.png", true);
@@ -25,12 +25,9 @@ Terrain::Terrain(int xSize, int zSize, noise::module::Perlin * perlin)
 	for (auto chunkIndex : nearbyChunkIndices){
 		Chunk * chunk = new Chunk(chunkIndex.x, chunkIndex.z);
 		chunk->Generate(perlin);
-  	chunk->LoadVBO();
+		chunk->LoadVBO();
 		loadedChunks.push_back(chunk);
 	}
-
-
-
 }
 
 std::list< glm::ivec3 > Terrain::Near(glm::vec3 position, int distance){

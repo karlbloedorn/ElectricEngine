@@ -8,9 +8,11 @@ public:
 	~Timings();
 	float FrameUpdate();
 	bool CanPlayFootstep();
-
+	bool CanSendReceive();
+	bool CanNetworkSync();
 private:
 	unsigned int lastFrameTime;
 	unsigned int lastFootstepTime;
+	unsigned int lastNetworkSync;
 };
 

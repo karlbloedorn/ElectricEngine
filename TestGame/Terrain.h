@@ -12,7 +12,7 @@
 class Terrain
 {
 public:
-	Terrain(int xSize, int zSize, noise::module::Perlin * noise);
+	Terrain(noise::module::Perlin * noise);
 	~Terrain();
 	void Render(float * modelview, float * projection);
 	std::list< glm::ivec3 > Terrain::Near(glm::vec3 position, int distance);

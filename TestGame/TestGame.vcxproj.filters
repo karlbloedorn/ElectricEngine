@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\deps">
+      <UniqueIdentifier>{ab383a97-a23e-45f6-9072-60d15de534e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\deps">
+      <UniqueIdentifier>{210f9bab-f31b-4cdd-b7ed-973c10884b3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -39,11 +45,29 @@
     <ClCompile Include="SceneryItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="deps\static\tiny_obj_loader.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Chunk.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\static\tiny_obj_loader.cc">
+      <Filter>Source Files\deps</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\static\netlink\SocketManager.cpp">
+      <Filter>Source Files\deps</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\static\netlink\Utf8.cpp">
+      <Filter>Source Files\deps</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\static\netlink\MsgPack.cpp">
+      <Filter>Source Files\deps</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\static\netlink\Socket.cpp">
+      <Filter>Source Files\deps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,11 +95,59 @@
     <ClInclude Include="Geometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="deps\static\tiny_obj_loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Chunk.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\MsgPack.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\MsgPackSocket.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\netLink.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\Number.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\Primitive.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\Socket.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\StreamManager.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\Utf8.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\Container.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\ContainerHeader.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\Core.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\Data.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\Element.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\netlink\Header.h">
+      <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\tiny_obj_loader.h">
+      <Filter>Header Files\deps</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
