@@ -16,13 +16,14 @@
 #include "Terrain.h"
 #include "Shader.h"
 #include "SceneryItem.h"
+#include "Audio.h"
 
 #define degreesToRadians(x) x*(3.141592f/180.0f)
 #define GLM_FORCE_RADIANS
 using namespace std;
 
-int windowHeight = 1050;
-int windowWidth = 1680;
+int windowHeight = 1080;
+int windowWidth = 1980;
 float cameraSpeed = 15.0f;
 glm::vec3 speedVector(0.0, 0.0, 0.0);
 float skyboxRotation = 0;
@@ -34,6 +35,7 @@ enum class GameState { PLAY, EXIT };
 GameState curGameState = GameState::PLAY;
 SDL_Window * window;
 
+Audio * audio;
 Timings * timings;
 Overlay * overlay;
 Skybox * skybox;
@@ -47,9 +49,10 @@ SceneryItem * weeds;
 vector<glm::vec3> rockPositions;
 vector<glm::vec3> weedPositions;
 
+
 void processinput();
 void gameloop();
-void drawgame();
+void drawgame(const glm::vec3 & cameraPosition, const glm::vec4 & lookVector);
 bool SubsystemInitialization(string & error);
 
 float groundLevel(float x, float z){
@@ -73,34 +76,43 @@ int main(int argc, char ** argv){
 	perlin->SetSeed(999); //TODO this should come from server if connected.
 	perlin->SetOctaveCount(2);
 	perlin->SetFrequency(0.25);
-
-	terrain = new Terrain(perlin);
 	timings = new Timings();
+
+	audio = new Audio(timings);
+	terrain = new Terrain(perlin);
 	overlay = new Overlay();
 	skybox = new Skybox();
 
 	rocks = new SceneryItem();
 	weeds = new SceneryItem();
 
-	rocks->LoadFromObj("assets/meshes/rock/", "rock01.obj", "rock_diffuse.png");
+	//rocks->LoadFromObj("assets/meshes/rock/", "rock01.obj", "rock_diffuse.png");
+	rocks->LoadFromObj("assets/meshes/derpsphere/", "derp.obj", "snow_gum_mod.png");
 	weeds->LoadFromObj("assets/meshes/tinyweed4/", "tiny_weed_04.obj", "diffuse.tga");
 
 	/*
-	uncomment and fix to re-enable generation of rocks and weeds.
-	for (int i = 0; i < 50;i++){
-		float r1 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (width*0.9))) + (width*0.05);
-		float r2 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (width*0.9))) + (width*0.05);
-		float level = groundLevel(r1-3.33, r2+1);
-		rockPositions.push_back(glm::vec3(r1, level-7.1, r2));		
+	for (int i = 0; i < 20;i++){
+		float r1 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (200 * 0.9))) - 100;
+		float r2 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (200 * 0.9))) - 100; 
+
+		float level = groundLevel(r1,r2);
+		rockPositions.push_back(glm::vec3(r1, level+1.1, r2));		
 	}
-	for (int i = 0; i < 50; i++){
-		float r1 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (width*0.9))) + (width*0.05);
-		float r2 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX /( width*0.9))) + (width*0.05);
+
+	*/
+	rockPositions.push_back(glm::vec3(0, 60, 0));
+
+	for (int i = 0; i < 10; i++){
+		float r1 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (200 * 0.9))) - 100;
+		float r2 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (200 * 0.9))) - 100;
 		float level = groundLevel(r1, r2);
-		weedPositions.push_back(glm::vec3(r1, level+0.2, r2));
-	}*/
+		weedPositions.push_back(glm::vec3(r1, level+0.0, r2));
+	}
 
 	gameloop();
+
+	delete audio;
+
 	return 0;
 }
 
@@ -195,21 +207,22 @@ void gameloop(){
 			}
 		}
 
-		drawgame();
+		// Calculate where the camera is pointed
+		auto xCamRotate = glm::rotate(cameraRotation.x, glm::vec3(0, 1, 0));
+		auto yCamRotate = glm::rotate(cameraRotation.y, glm::vec3(1, 0, 0));
+		auto bothRotate = xCamRotate * yCamRotate;
+		auto lookVector = bothRotate * glm::vec4(0, 0, 1, 0);
+		auto cameraPosition = playerPosition + glm::vec3(0, 4, 0);
+
+		audio->Update( cameraPosition, lookVector);
+		drawgame( cameraPosition, lookVector);
 	}
 }
 
-void drawgame(){
+void drawgame(const glm::vec3 & cameraPosition, const glm::vec4 & lookVector){
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Calculate where the camera
-	auto xRotate = glm::rotate(cameraRotation.x, glm::vec3(0, 1, 0));
-	auto yRotate = glm::rotate(cameraRotation.y, glm::vec3(1, 0, 0));
-	auto bothRotate = xRotate * yRotate;
-	auto lookVector = bothRotate * glm::vec4(0, 0, 1, 0);
-
-	auto cameraPosition = playerPosition + glm::vec3(0, 4, 0);
 	auto lookat = glm::lookAt(cameraPosition, glm::vec3(lookVector) + cameraPosition, glm::vec3(0.0, 1.0, 0.0));
 
 	glEnable(GL_DEPTH_TEST);

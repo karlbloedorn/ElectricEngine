@@ -5,6 +5,8 @@ Timings::Timings()
 	lastFrameTime = SDL_GetTicks();
 	lastFootstepTime = SDL_GetTicks();
 	lastNetworkSync = SDL_GetTicks();
+	lastAudioUpdate = SDL_GetTicks();
+
 }
 
 float Timings::FrameUpdate()
@@ -29,6 +31,14 @@ bool Timings::CanNetworkSync(){
 	auto currentTime = SDL_GetTicks();
 	if ((currentTime - lastFootstepTime) > 100){
 		lastNetworkSync = SDL_GetTicks();
+		return true;
+	}
+	return false;
+}
+bool Timings::CanAudioUpdate(){
+	auto currentTime = SDL_GetTicks();
+	if ((currentTime - lastAudioUpdate) > 30){
+		lastAudioUpdate = SDL_GetTicks();
 		return true;
 	}
 	return false;

@@ -10,9 +10,11 @@ public:
 	bool CanPlayFootstep();
 	bool CanSendReceive();
 	bool CanNetworkSync();
+	bool CanAudioUpdate();
 private:
 	unsigned int lastFrameTime;
 	unsigned int lastFootstepTime;
 	unsigned int lastNetworkSync;
+	unsigned int lastAudioUpdate;
 };
 

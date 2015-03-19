@@ -54,6 +54,9 @@
     <ClCompile Include="deps\static\tiny_obj_loader.cc">
       <Filter>Source Files\deps</Filter>
     </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Timings.h">
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="deps\static\tiny_obj_loader.h">
       <Filter>Header Files\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

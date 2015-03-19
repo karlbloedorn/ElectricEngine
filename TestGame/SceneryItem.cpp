@@ -76,6 +76,7 @@ bool SceneryItem::LoadFromObj(string basePath, string filePath, string forceText
 	numTriangles = shape.mesh.indices.size() / 3;
 	triangles = new Triangle[numTriangles];
 	bool hasNormals = shape.mesh.normals.size() == shape.mesh.positions.size();
+	bool hasTextureCoords =  (shape.mesh.texcoords.size() /2) == (shape.mesh.positions.size() / 3);
 
 	for (int i = 0; i < shape.mesh.indices.size() / 3; i++) {
 		int vert1 = shape.mesh.indices[3 * i + 0];
@@ -118,13 +119,14 @@ bool SceneryItem::LoadFromObj(string basePath, string filePath, string forceText
 			triangles[i].c.normal.y = normal.y;
 			triangles[i].c.normal.z = normal.z;
 		}
-	
-		triangles[i].a.textureCoord.x = shape.mesh.texcoords[2 * vert1 + 0];
-		triangles[i].a.textureCoord.y = shape.mesh.texcoords[2 * vert1 + 1];
-		triangles[i].b.textureCoord.x = shape.mesh.texcoords[2 * vert2 + 0];
-		triangles[i].b.textureCoord.y = shape.mesh.texcoords[2 * vert2 + 1];
-		triangles[i].c.textureCoord.x = shape.mesh.texcoords[2 * vert3 + 0];
-		triangles[i].c.textureCoord.y = shape.mesh.texcoords[2 * vert3 + 1];
+		if (hasTextureCoords){
+			triangles[i].a.textureCoord.x = shape.mesh.texcoords[2 * vert1 + 0];
+			triangles[i].a.textureCoord.y = shape.mesh.texcoords[2 * vert1 + 1];
+			triangles[i].b.textureCoord.x = shape.mesh.texcoords[2 * vert2 + 0];
+			triangles[i].b.textureCoord.y = shape.mesh.texcoords[2 * vert2 + 1];
+			triangles[i].c.textureCoord.x = shape.mesh.texcoords[2 * vert3 + 0];
+			triangles[i].c.textureCoord.y = shape.mesh.texcoords[2 * vert3 + 1];
+		}
 	}
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
