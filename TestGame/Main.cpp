@@ -1,8 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 #include <GL/glew.h>
-#define degreesToRadians(x) x*(3.141592f/180.0f)
-#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
@@ -12,15 +10,15 @@
 #include <sstream>
 #include <map>
 #include <iostream>
-
 #include "Timings.h"
 #include "Overlay.h"
 #include "Skybox.h"
 #include "Terrain.h"
 #include "Shader.h"
 #include "SceneryItem.h"
-#include "Client.h"
 
+#define degreesToRadians(x) x*(3.141592f/180.0f)
+#define GLM_FORCE_RADIANS
 using namespace std;
 
 int windowHeight = 1050;
@@ -101,16 +99,6 @@ int main(int argc, char ** argv){
 		float level = groundLevel(r1, r2);
 		weedPositions.push_back(glm::vec3(r1, level+0.2, r2));
 	}*/
-
-	Client * c = new Client();
-	string connectError;
-	bool success = c->Connect("10.8.0.2:3333", connectError);
-	if (!initSuccess){
-		cout << connectError << endl;
-	}
-	else {
-		
-	}
 
 	gameloop();
 	return 0;
@@ -286,11 +274,11 @@ void drawgame(){
 bool SubsystemInitialization(string & error){
 
 	SDL_Init(SDL_INIT_EVERYTHING);
-	if (SDLNet_Init() < 0)
-	{
-		error = string("Failed to start network subsystem: ").append(SDLNet_GetError());
-		return false;
-	}
+	//if (SDLNet_Init() < 0)
+	//{
+	//	error = string("Failed to start network subsystem: ").append(SDLNet_GetError());
+	//	return false;
+	//}
 	window = SDL_CreateWindow("Test Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_OPENGL); // | SDL_WINDOW_FULLSCREEN);
 	if (window == nullptr){
 		error = string("Failed to start windowing subsystem");
