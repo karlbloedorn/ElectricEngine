@@ -56,7 +56,7 @@ void drawgame(const glm::vec3 & cameraPosition, const glm::vec4 & lookVector);
 bool SubsystemInitialization(string & error);
 
 float groundLevel(float x, float z){
-	return 55 + perlin->GetValue(x / 25.5, 0, (z / 25.5)) * 15;;
+	return 55 + perlin->GetValue(x / 505.5, 0, (z / 505.5)) * 15;;
 }
 
 int main(int argc, char ** argv){
@@ -74,8 +74,9 @@ int main(int argc, char ** argv){
 
 	perlin = new noise::module::Perlin();
 	perlin->SetSeed(999); //TODO this should come from server if connected.
-	perlin->SetOctaveCount(2);
-	perlin->SetFrequency(0.25);
+	perlin->SetOctaveCount(8);
+	perlin->SetLacunarity(2);
+	perlin->SetFrequency(2);
 	timings = new Timings();
 
 	audio = new Audio(timings);
@@ -214,7 +215,18 @@ void gameloop(){
 		auto lookVector = bothRotate * glm::vec4(0, 0, 1, 0);
 		auto cameraPosition = playerPosition + glm::vec3(0, 4, 0);
 
+
+		rockPositions[0].x = sin(skyboxRotation*50) * 60;
+		rockPositions[0].z = cos(skyboxRotation * 50) * 60;;// cos(delta / 100.0) * 50;
+
+		rockPositions[0].y = groundLevel(rockPositions[0].x, rockPositions[0].z) + 3;
+
+		audio->MusicOrchestral.setPosition(YSE::Vec(rockPositions[0].x, rockPositions[0].y, rockPositions[0].z));
+
 		audio->Update( cameraPosition, lookVector);
+
+
+
 		drawgame( cameraPosition, lookVector);
 	}
 }
@@ -251,6 +263,9 @@ void drawgame(const glm::vec3 & cameraPosition, const glm::vec4 & lookVector){
 	}
 
 	terrain->Render(glm::value_ptr(lookat), glm::value_ptr(perspective));
+
+
+
 
 	for (auto rockPosition : rockPositions){
 		auto movedRock = glm::translate(lookat, rockPosition);

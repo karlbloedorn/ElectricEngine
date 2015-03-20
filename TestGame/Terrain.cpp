@@ -5,7 +5,7 @@
 Terrain::Terrain(noise::module::Perlin * perlin)
 {
 	glGenTextures(1, &texture);
-	Textures::SetupTexture(texture, "assets/textures/terrain/130713 089x2 scb01.png", true);
+	Textures::SetupTexture(texture, "assets/textures/terrain/lava2_d.jpg", true);
 	this->shader = new Shader();
 	this->shader->SetupShader("assets/shaders/terrain.vert", "assets/shaders/terrain.frag",
 		list < string > {

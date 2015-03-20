@@ -55,7 +55,7 @@ void Chunk::Generate(noise::module::Perlin * noiseGenerator)
 		for (int z = 0; z < heightLoopMax; z++){
 			auto global_x = x + this->x * Chunk::ChunkSize;
 			auto global_z = z + this->z * Chunk::ChunkSize;
-			auto height = 55 + noiseGenerator->GetValue(global_x / 25.5, 0, (global_z / 25.5)) * 15;
+			auto height = 55 + noiseGenerator->GetValue(global_x / 505.5, 0, (global_z / 505.5)) * 15;
 			heightArray(x,z) = height;
 		}
 	}

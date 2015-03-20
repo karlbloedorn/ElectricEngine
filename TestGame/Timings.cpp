@@ -37,7 +37,7 @@ bool Timings::CanNetworkSync(){
 }
 bool Timings::CanAudioUpdate(){
 	auto currentTime = SDL_GetTicks();
-	if ((currentTime - lastAudioUpdate) > 30){
+	if ((currentTime - lastAudioUpdate) > 20){
 		lastAudioUpdate = SDL_GetTicks();
 		return true;
 	}
