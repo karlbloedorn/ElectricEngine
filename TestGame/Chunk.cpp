@@ -5,6 +5,9 @@
 #define normalArray(r, c) (normals[(r)*normalLoopMax + (c)])
 #define normalArrayShiftedOne(r, c) (normals[(r+1)*normalLoopMax + (c+1)])
 
+#include "deps/static/simplexnoise.h"
+
+
 const int Chunk::ChunkSize = 50;
 
 /*
@@ -44,7 +47,7 @@ Chunk::~Chunk()
 }
 
 
-void Chunk::Generate(noise::module::Perlin * noiseGenerator)
+void Chunk::Generate()
 {
 
 	const int heightLoopMax = Chunk::ChunkSize + 4;
@@ -55,7 +58,8 @@ void Chunk::Generate(noise::module::Perlin * noiseGenerator)
 		for (int z = 0; z < heightLoopMax; z++){
 			auto global_x = x + this->x * Chunk::ChunkSize;
 			auto global_z = z + this->z * Chunk::ChunkSize;
-			auto height = 55 + noiseGenerator->GetValue(global_x / 505.5, 0, (global_z / 505.5)) * 15;
+			auto height = 30 + octave_noise_2d(16, 0.05,10, global_x/2500.0, global_z/2500.0)*20;
+			//auto height = 55 + noiseGenerator->GetValue(global_x / 505.5, 0, (global_z / 505.5)) * 15;
 			heightArray(x,z) = height;
 		}
 	}

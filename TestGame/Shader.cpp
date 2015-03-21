@@ -73,6 +73,21 @@ bool Shader::SetupShader(const string & vertexPath, const string & fragmentPath,
 		else if (uniform == "modelMatrix"){
 			this->modelMatrix = location;
 		}
+		else if (uniform == "texture0"){
+			this->texture0 = location;
+		}
+		else if (uniform == "texture1"){
+			this->texture1 = location;
+		}
+		else if (uniform == "texture2"){
+			this->texture2 = location;
+		}
+		else if (uniform == "texture3"){
+			this->texture3 = location;
+		}
+		else if (uniform == "texture4"){
+			this->texture4 = location;
+		}
 	}
 	return true;	
 }

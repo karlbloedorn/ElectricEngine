@@ -1,5 +1,4 @@
 #pragma once
-#include <noise/noise.h>
 #include <iostream>
 #include <GL/glew.h>
 #include "Shader.h"
@@ -14,7 +13,7 @@ class Chunk
 		Chunk(int x, int z);
 		~Chunk();
 		int x, z;
-		void Generate(noise::module::Perlin * noiseGenerator);
+		void Generate();
 		void LoadVBO();
 		void UnloadVBO();
 		void Render();

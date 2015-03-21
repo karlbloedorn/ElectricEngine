@@ -57,6 +57,9 @@
     <ClCompile Include="Audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="deps\static\simplexnoise.cpp">
+      <Filter>Source Files\deps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Timings.h">
@@ -94,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="Audio.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\static\simplexnoise.h">
+      <Filter>Header Files\deps</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

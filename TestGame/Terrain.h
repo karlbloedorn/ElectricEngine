@@ -1,5 +1,4 @@
 #pragma once
-#include <noise/noise.h>
 #include <iostream>
 #include <GL/glew.h>
 #include "Shader.h"
@@ -12,13 +11,13 @@
 class Terrain
 {
 public:
-	Terrain(noise::module::Perlin * noise);
+	Terrain();
 	~Terrain();
 	void Render(float * modelview, float * projection);
 	std::list< glm::ivec3 > Terrain::Near(glm::vec3 position, int distance);
 private:
 	Shader * shader;
-	GLuint texture;
+	GLuint textures[5];
 	std::list< Chunk * > loadedChunks;
 };
 

@@ -17,6 +17,7 @@
 #include "Shader.h"
 #include "SceneryItem.h"
 #include "Audio.h"
+#include "deps/static/simplexnoise.h"
 
 #define degreesToRadians(x) x*(3.141592f/180.0f)
 #define GLM_FORCE_RADIANS
@@ -24,7 +25,7 @@ using namespace std;
 
 int windowHeight = 1080;
 int windowWidth = 1980;
-float cameraSpeed = 15.0f;
+float cameraSpeed = 20.0f;
 glm::vec3 speedVector(0.0, 0.0, 0.0);
 float skyboxRotation = 0;
 glm::vec3 playerPosition = glm::vec3(50, 10.3822203, 50);
@@ -41,7 +42,6 @@ Overlay * overlay;
 Skybox * skybox;
 Terrain * terrain;
 Shader * terrainShader;
-noise::module::Perlin * perlin;
 
 SceneryItem * rocks;
 SceneryItem * weeds;
@@ -56,7 +56,8 @@ void drawgame(const glm::vec3 & cameraPosition, const glm::vec4 & lookVector);
 bool SubsystemInitialization(string & error);
 
 float groundLevel(float x, float z){
-	return 55 + perlin->GetValue(x / 505.5, 0, (z / 505.5)) * 15;;
+	return 30 + octave_noise_2d(16, 0.05, 10, x / 2500.0, z / 2500.0) * 20;
+	//return 55 + perlin->GetValue(x / 505.5, 0, (z / 505.5)) * 15;;
 }
 
 int main(int argc, char ** argv){
@@ -72,15 +73,10 @@ int main(int argc, char ** argv){
 	glClearColor(0.1, 0.1, 0.1, 1.0);
 	glEnable(GL_TEXTURE_2D);
 
-	perlin = new noise::module::Perlin();
-	perlin->SetSeed(999); //TODO this should come from server if connected.
-	perlin->SetOctaveCount(8);
-	perlin->SetLacunarity(2);
-	perlin->SetFrequency(2);
 	timings = new Timings();
 
 	audio = new Audio(timings);
-	terrain = new Terrain(perlin);
+	terrain = new Terrain();
 	overlay = new Overlay();
 	skybox = new Skybox();
 
@@ -88,7 +84,7 @@ int main(int argc, char ** argv){
 	weeds = new SceneryItem();
 
 	//rocks->LoadFromObj("assets/meshes/rock/", "rock01.obj", "rock_diffuse.png");
-	rocks->LoadFromObj("assets/meshes/derpsphere/", "derp.obj", "snow_gum_mod.png");
+	rocks->LoadFromObj("assets/meshes/well/", "well.obj", "snow_gum_mod.png");
 	weeds->LoadFromObj("assets/meshes/tinyweed4/", "tiny_weed_04.obj", "diffuse.tga");
 
 	/*
@@ -99,9 +95,9 @@ int main(int argc, char ** argv){
 		float level = groundLevel(r1,r2);
 		rockPositions.push_back(glm::vec3(r1, level+1.1, r2));		
 	}
-
 	*/
-	rockPositions.push_back(glm::vec3(0, 60, 0));
+	rockPositions.push_back(glm::vec3(0, 40, 0));
+	rockPositions.push_back(glm::vec3(10, 40, 0));
 
 	for (int i = 0; i < 10; i++){
 		float r1 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (200 * 0.9))) - 100;
@@ -109,7 +105,11 @@ int main(int argc, char ** argv){
 		float level = groundLevel(r1, r2);
 		weedPositions.push_back(glm::vec3(r1, level+0.0, r2));
 	}
-
+	GLenum err;
+	while ((err = glGetError()) != GL_NO_ERROR) {
+		std::cout << "OpenGL error: " << err << endl;
+		exit(1);
+	}
 	gameloop();
 
 	delete audio;
@@ -130,12 +130,18 @@ void gameloop(){
 			case SDL_QUIT:
 				curGameState = GameState::EXIT;
 				break;
+			case SDL_KEYUP:
+				switch (evnt.key.keysym.sym){
+					case SDLK_TAB:
+						rockPositions.push_back(playerPosition);
+					break;
+					case SDLK_LSHIFT:
+						wireframe = !wireframe;
+						break;
+				}
 			case SDL_KEYDOWN:
 				switch (evnt.key.keysym.sym)
 				{
-				case SDLK_LSHIFT:
-					wireframe = !wireframe;
-					break;
 				case SDLK_ESCAPE:
 					curGameState = GameState::EXIT;
 					break;
@@ -163,6 +169,28 @@ void gameloop(){
 				{ SDL_SCANCODE_S, glm::vec3(0.0, 0.0, -1.0) },
 				{ SDL_SCANCODE_D, glm::vec3(-1.0, 0.0, 0.0) }
 		};
+
+		if (keystates[SDL_SCANCODE_UP]){
+			rockPositions[rockPositions.size() - 1].x += delta*4;
+		}
+		if (keystates[SDL_SCANCODE_DOWN]){
+			rockPositions[rockPositions.size() - 1].x -= delta*4;
+		}
+		if (keystates[SDL_SCANCODE_Q]){
+			rockPositions[rockPositions.size() - 1].y += delta * 4;
+		}
+		if (keystates[SDL_SCANCODE_Z]){
+			rockPositions[rockPositions.size() - 1].y -= delta * 4;
+		}
+		if (keystates[SDL_SCANCODE_LEFT]){
+			rockPositions[rockPositions.size() - 1].z -= delta * 4;
+		}
+		if (keystates[SDL_SCANCODE_RIGHT]){
+			rockPositions[rockPositions.size() - 1].z += delta * 4;
+		}
+
+
+
 		float groundLevelAtPos = groundLevel(playerPosition.x, playerPosition.z);
 		auto walkingVector = glm::vec3(0, 0, 0);
 		for (auto var : moveMap2)
@@ -216,16 +244,14 @@ void gameloop(){
 		auto cameraPosition = playerPosition + glm::vec3(0, 4, 0);
 
 
-		rockPositions[0].x = sin(skyboxRotation*50) * 60;
-		rockPositions[0].z = cos(skyboxRotation * 50) * 60;;// cos(delta / 100.0) * 50;
+		//rockPositions[0].x = sin(skyboxRotation*50) * 60;
+		//rockPositions[0].z = cos(skyboxRotation * 50) * 60;;// cos(delta / 100.0) * 50;
 
-		rockPositions[0].y = groundLevel(rockPositions[0].x, rockPositions[0].z) + 3;
+		//rockPositions[0].y = groundLevel(rockPositions[0].x, rockPositions[0].z) + 3;
 
 		audio->MusicOrchestral.setPosition(YSE::Vec(rockPositions[0].x, rockPositions[0].y, rockPositions[0].z));
 
 		audio->Update( cameraPosition, lookVector);
-
-
 
 		drawgame( cameraPosition, lookVector);
 	}
@@ -264,9 +290,6 @@ void drawgame(const glm::vec3 & cameraPosition, const glm::vec4 & lookVector){
 
 	terrain->Render(glm::value_ptr(lookat), glm::value_ptr(perspective));
 
-
-
-
 	for (auto rockPosition : rockPositions){
 		auto movedRock = glm::translate(lookat, rockPosition);
 		rocks->Render(glm::value_ptr(movedRock), glm::value_ptr(perspective));
@@ -293,10 +316,7 @@ void drawgame(const glm::vec3 & cameraPosition, const glm::vec4 & lookVector){
 	
 	SDL_GL_SwapWindow(window);
 
-	GLenum err;
-	while ((err = glGetError()) != GL_NO_ERROR) {
-		std::cout << "OpenGL error: " << err << endl;
-	}
+
 }
 
 bool SubsystemInitialization(string & error){
@@ -307,7 +327,7 @@ bool SubsystemInitialization(string & error){
 	//	error = string("Failed to start network subsystem: ").append(SDLNet_GetError());
 	//	return false;
 	//}
-	window = SDL_CreateWindow("Test Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_OPENGL); // | SDL_WINDOW_FULLSCREEN);
+	window = SDL_CreateWindow("Test Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 	if (window == nullptr){
 		error = string("Failed to start windowing subsystem");
 		return false;

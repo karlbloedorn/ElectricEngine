@@ -26,5 +26,10 @@ public:
 	void DisableShader();
 	GLuint projectionMatrixLocation;
 	GLuint modelMatrix;
+	GLuint texture0;
+	GLuint texture1;
+	GLuint texture2;
+	GLuint texture3;
+	GLuint texture4;
 };
 

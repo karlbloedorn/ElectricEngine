@@ -16,7 +16,8 @@ SceneryItem::SceneryItem()
 	},
 	list < string > {
 			"projectionMatrix",
-				"modelMatrix"
+				"modelMatrix",
+				"texture0"
 		});
 }
 
@@ -66,13 +67,19 @@ bool SceneryItem::LoadFromObj(string basePath, string filePath, string forceText
 		textureFile = forceTexture;
 	}
 
-
 	glGenTextures(1, &texture);
 	Textures::SetupTexture(texture, basePath + textureFile, true);
 
+	
+	tinyobj::shape_t shape;
+	if (shapes.size() > 1){
+		shape = shapes[1];
+	}
+	else {
+		shape = shapes[0];
 
+	}
 
-	auto shape = shapes[0];
 	numTriangles = shape.mesh.indices.size() / 3;
 	triangles = new Triangle[numTriangles];
 	bool hasNormals = shape.mesh.normals.size() == shape.mesh.positions.size();
@@ -139,6 +146,7 @@ bool SceneryItem::LoadFromObj(string basePath, string filePath, string forceText
 
 void SceneryItem::Render(float * modelview, float * projection)
 {
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	this->shader->EnableShader();
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -147,6 +155,7 @@ void SceneryItem::Render(float * modelview, float * projection)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, position));
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, textureCoord));
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, normal));
+	glUniform1i(this->shader->texture0, GL_TEXTURE0);
 	glDrawArrays(GL_TRIANGLES, 0, numTriangles * 3);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	this->shader->DisableShader();
