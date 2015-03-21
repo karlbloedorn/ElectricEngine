@@ -3,16 +3,29 @@
 
 Audio::Audio(Timings * timings)
 {
+
 	this->timings = timings;
 	YSE::System().init();
-	MusicOrchestral.create("assets/sounds/footstep_a_mech_mega_01.wav");
-	MusicOrchestral.setPosition(YSE::Vec(0, 60, 0));
+
+	YSE::System().getGlobalReverb().setActive(true);
+	YSE::System().getGlobalReverb().setPreset(YSE::REVERB_GENERIC);
+	YSE::ChannelMaster().attachReverb();
+
+
+	GameReverb.create();
+	GameReverb.setPosition(YSE::Vec(0, 4, 0)).setSize(100).setRollOff(200);
+	GameReverb.setPreset(YSE::REVERB_SEWERPIPE);
+
+	MusicOrchestral.create("assets/sounds/Pop-31.wav");
+	MusicOrchestral.setPosition(YSE::Vec(0, 4, 0));
 	MusicOrchestral.setDoppler(false);
 	MusicOrchestral.setRelative(false);
-	MusicOrchestral.setVolume(0.2, 0);
+	MusicOrchestral.setVolume(0.7, 0);
 	MusicOrchestral.setLooping(true);
-	MusicOrchestral.setSize(160);
-		//MusicOrchestral.moveTo(YSE::ChannelMusic());
+	MusicOrchestral.setSize(100);
+
+	//MusicOrchestral.moveTo(YSE::ChannelMusic());
+
 	MusicOrchestral.play();
 }
 
@@ -26,9 +39,6 @@ void Audio::Update(const glm::vec3 & cameraPosition, const glm::vec4 & cameraRot
 		YSE::Listener().setPosition(YSE::Vec(cameraPosition.x, cameraPosition.y, cameraPosition.z));
 		YSE::Listener().setOrientation(YSE::Vec(-cameraRotation.x, -cameraRotation.y, -cameraRotation.z), YSE::Vec(0, 1, 0));
 		YSE::System().update();
-
 	}
-	
+
 }
-
-
