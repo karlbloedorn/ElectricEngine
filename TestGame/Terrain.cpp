@@ -7,10 +7,10 @@ Terrain::Terrain()
 {
 	glGenTextures(5, textures);
 	Textures::SetupTexture(textures[0], "assets/textures/terrain/map.png", true);
-	Textures::SetupTexture(textures[1], "assets/textures/terrain/grass_green_d.jpg", true);
+	Textures::SetupTexture(textures[1], "assets/textures/terrain/130713 089x2 scb01.png", true);
 	Textures::SetupTexture(textures[2], "assets/textures/terrain/paving 2.png", true);
 	Textures::SetupTexture(textures[3], "assets/textures/terrain/ground_mud_d.jpg", true);
-	Textures::SetupTexture(textures[4], "assets/textures/terrain/130713 089x2 scb01.png", true);
+	Textures::SetupTexture(textures[4], "assets/textures/terrain/grass_green_d.jpg", true);
 
 	this->shader = new Shader();
 	this->shader->SetupShader("assets/shaders/terrain.vert", "assets/shaders/terrain.frag",

@@ -241,7 +241,7 @@ void gameloop(){
 		auto yCamRotate = glm::rotate(cameraRotation.y, glm::vec3(1, 0, 0));
 		auto bothRotate = xCamRotate * yCamRotate;
 		auto lookVector = bothRotate * glm::vec4(0, 0, 1, 0);
-		auto cameraPosition = playerPosition + glm::vec3(0, 4, 0);
+		auto cameraPosition = playerPosition + glm::vec3(0, 12, 0);
 
 
 		//rockPositions[0].x = sin(skyboxRotation*50) * 60;
