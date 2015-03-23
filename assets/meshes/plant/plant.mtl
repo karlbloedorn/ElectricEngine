@@ -1,0 +1,10 @@
+newmtl plant.O.ma
+Ns 100.0
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd plant_diffuse.tga
+map_Kn plant_normal.tga
