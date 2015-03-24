@@ -8,10 +8,16 @@
 #include <iostream>
 #include <stdio.h>
 #include <GL/glew.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include <GL/GL.h>
-#include <GL/GLU.h>
+#include <SDL.h>
+#include <SDL_ttf.h>
+#ifdef __APPLE__
+#  include <OpenGL/gl.h>
+#  include <OpenGL/GLU.h>
+#else
+#  include <GL/gl.h>
+#  include <GL/GLU.h>
+#endif/*__APPLE__*/
+#include "../Scene/Entity.hpp"
 #include "Mesh.hpp"
 #include "Grid.hpp"
 #include "Shader.hpp"
