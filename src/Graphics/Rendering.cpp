@@ -1,4 +1,4 @@
-#include "Rendering.hpp"
+﻿#include "Rendering.hpp"
 
 Rendering::Rendering(){}
 
@@ -10,8 +10,11 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 	int opts = SDL_WINDOW_OPENGL;
 	if (fullScreen){
 		opts = opts | SDL_WINDOW_FULLSCREEN;
-	}
-	
+	}  
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	this->window = SDL_CreateWindow("Test Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->windowWidth, this->windowHeight, opts);
 	if (window == nullptr){
 		error = string("Failed to start windowing subsystem");
