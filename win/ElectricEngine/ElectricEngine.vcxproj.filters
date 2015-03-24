@@ -63,6 +63,9 @@
     <ClCompile Include="..\..\src\Controls.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\Grid.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Scene\Entity.hpp">
@@ -100,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Controls.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Graphics\Grid.hpp">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

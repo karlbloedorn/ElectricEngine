@@ -43,6 +43,7 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 		exit(1);
 	}
 	this->skybox = new Skybox(assetPath);
+	this->grid = new Grid();
 
 	this->entityShader = new Shader();
 	this->entityShader->SetupShader(assetPath + "shaders/entities.vert", assetPath + "shaders/entities.frag",
@@ -57,6 +58,10 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 				"viewMatrix",
 				"texture0"
 	});
+
+
+
+
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -147,6 +152,11 @@ void Rendering::RenderGame(map<int, vector<int>> * renderMap, map<int, StaticPro
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+
+	//this->terrainShader->EnableShader();
+	//this->terrainShader->DisableShader();
+
 
 
 	this->entityShader->EnableShader();

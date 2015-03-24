@@ -1,4 +1,8 @@
 #pragma once
+struct Position2D{
+	float x;
+	float z;
+};
 struct Position{
 	float x;
 	float y;
@@ -23,4 +27,13 @@ struct Triangle{
 	Vertex a;
 	Vertex b;
 	Vertex c;
+};
+
+struct Triangle2D{
+	Vertex a;
+	Vertex b;
+	Vertex c;
+};
+struct Vertex2D{
+	Position position;
 };

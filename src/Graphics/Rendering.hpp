@@ -12,17 +12,15 @@
 #include <SDL2/SDL_ttf.h>
 #include <GL/GL.h>
 #include <GL/GLU.h>
-
 #include "Mesh.hpp"
+#include "Grid.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "Skybox.hpp"
 #include "../Scene/Entity.hpp"
 #include "../Scene/StaticProp.hpp"
 
-
 using namespace std;
-
 
 class Rendering {
 
@@ -33,7 +31,9 @@ private:
 	TTF_Font * roboto50;
 	TTF_Font * roboto200;
 	Skybox * skybox;
+	Grid * grid;
 	Shader * entityShader;
+	Shader * terrainShader;
 public:
 	Rendering();
 	bool Initialize(string & error, int windowHeight, int windowWidth, bool fullScreen, string assetPath);
