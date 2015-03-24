@@ -118,14 +118,6 @@ void Rendering::RenderText(std::string text, TTF_Font * font, SDL_Color color, i
 }
 
 void Rendering::RenderGame(map<int, vector<int>> * renderMap, map<int, StaticProp *> * staticPropMap){
-	auto skyboxRotation = 0.0f;
-	auto xCamRotate = glm::rotate(cameraRotation.x, glm::vec3(0, 1, 0));
-	auto yCamRotate = glm::rotate(cameraRotation.y, glm::vec3(1, 0, 0));
-	auto bothRotate = xCamRotate * yCamRotate;
-	auto lookVector = bothRotate * glm::vec4(0, 0, 1, 0);
-	auto cameraPosition = playerPosition + glm::vec3(0, 12, 0);
-	auto lookat = glm::lookAt(cameraPosition, glm::vec3(lookVector) + cameraPosition, glm::vec3(0.0, 1.0, 0.0));
-
 	glEnable(GL_ALPHA_TEST);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -133,7 +125,6 @@ void Rendering::RenderGame(map<int, vector<int>> * renderMap, map<int, StaticPro
 	glAlphaFunc(GL_GREATER, 0.1);
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
 	if (this->wireframe){
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -147,8 +138,8 @@ void Rendering::RenderGame(map<int, vector<int>> * renderMap, map<int, StaticPro
 	auto perspective = glm::perspectiveFov<float>(1.27, windowWidth, windowHeight, 0.1f, 5000.0f);
 	glLoadMatrixf(glm::value_ptr(perspective));
 	glMatrixMode(GL_MODELVIEW);
-	auto skyboxPosition = glm::translate(playerPosition* glm::vec3(1, 1, 1));
-	auto combinedSkyboxMat = lookat*skyboxPosition;
+	auto skyboxPosition = glm::translate(cameraPosition);
+	auto combinedSkyboxMat = lookAt*skyboxPosition;
 	auto rotate = glm::rotate(combinedSkyboxMat, skyboxRotation, glm::vec3(0, 1, 0));
 	glLoadMatrixf(glm::value_ptr(rotate));
 	skybox->Render();
@@ -157,9 +148,10 @@ void Rendering::RenderGame(map<int, vector<int>> * renderMap, map<int, StaticPro
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+
 	this->entityShader->EnableShader();
 	glUniformMatrix4fv(this->entityShader->projectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(perspective));
-	glUniformMatrix4fv(this->entityShader->viewMatrixLocation, 1, GL_FALSE, glm::value_ptr(lookat));
+	glUniformMatrix4fv(this->entityShader->viewMatrixLocation, 1, GL_FALSE, glm::value_ptr(lookAt));
 
 	for (auto entity : *renderMap){
 		int entityID = entity.first;

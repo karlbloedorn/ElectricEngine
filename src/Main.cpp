@@ -1,18 +1,26 @@
 #include "Scene/Assets.hpp"
 #include "Graphics/Rendering.hpp"
+#include "Controls.hpp"
 
+Controls * controls;
 Assets * assets;
 Rendering * rendering;
 void gameloop();
 map<int, vector<int>> renderMap;
 map<int, Entity *> entityMap;
 map<int, StaticProp *> staticPropMap;
+glm::vec3 playerPosition = glm::vec3(10, 0, 10);
+
+float playerSpeed = 20.0f;
+
 
 int main(int argc, char * argv[]){
 	string assetPath = "../../assets/";
 	string initError;
 	SDL_Init(SDL_INIT_EVERYTHING);
 	rendering = new Rendering();
+	controls = new Controls();
+
 	bool initRenderingSuccess = rendering->Initialize(initError, 1080, 1920, false, assetPath);
 	bool initSuccess = initRenderingSuccess;
 	if (!initSuccess){
@@ -72,43 +80,35 @@ void gameloop(){
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_SetRelativeMouseMode(SDL_bool::SDL_TRUE);
 
-
 	while (1){
-
-
-		SDL_Event evnt;
-		while (SDL_PollEvent(&evnt)){
-			switch (evnt.type){
-			case SDL_QUIT:
-				return;
-			case SDL_KEYUP:
-				switch (evnt.key.keysym.sym){
-				case SDLK_TAB:
-					break;
-				case SDLK_LSHIFT:
-					rendering->wireframe = !rendering->wireframe;
-					break;
-				}
-			case SDL_KEYDOWN:
-
-				switch (evnt.key.keysym.sym)
-				{
-				case SDLK_ESCAPE:
-					return;
-				}
-				break;
-			case SDL_MOUSEMOTION:
-				rendering->cameraRotation.y += 0.003f  * evnt.motion.yrel;
-				rendering->cameraRotation.x -= 0.003f * evnt.motion.xrel;
-				if (rendering->cameraRotation.y < degreesToRadians(-75)){
-					rendering->cameraRotation.y = degreesToRadians(-75);
-				}
-				if (rendering->cameraRotation.y> degreesToRadians(89)){
-					rendering->cameraRotation.y = degreesToRadians(89);
-				}
-				break;
-			}
+		float delta = controls->GetInput();
+		if (controls->quit){
+			return;
 		}
+		rendering->wireframe = controls->wireframe;
+		auto moveVector = glm::vec3(0.0, 0.0, 0.0);
+
+		moveVector.x = controls->normalizedWalkingVector.x;
+		moveVector.z = controls->normalizedWalkingVector.z;
+		moveVector.y = controls->normalizedWalkingVector.y; // += 0 * delta;
+		auto xRotate = glm::rotate(controls->cameraRotation.x, glm::vec3(0, -1, 0));
+		auto movement = glm::vec4(moveVector * delta * playerSpeed, 0) * xRotate;
+		auto proposed_location =  playerPosition + glm::vec3(movement);
+		bool xOkay = true;
+		bool yOkay = true;
+		bool zOkay = true;
+		playerPosition += glm::vec3(xOkay ? movement.x : 0, yOkay ? movement.y : 0, zOkay ? movement.z : 0);
+
+		auto xCamRotate = glm::rotate(controls->cameraRotation.x, glm::vec3(0, 1, 0));
+		auto yCamRotate = glm::rotate(controls->cameraRotation.y, glm::vec3(1, 0, 0));
+		auto bothRotate = xCamRotate * yCamRotate;
+		auto lookVector = bothRotate * glm::vec4(0, 0, 1, 0);
+		auto cameraPosition = playerPosition + glm::vec3(0, 12, 0);
+
+		auto lookat = glm::lookAt(cameraPosition, glm::vec3(lookVector) + cameraPosition, glm::vec3(0.0, 1.0, 0.0));
+		rendering->lookAt = lookat;
+		rendering->cameraPosition = cameraPosition;
+		rendering->skyboxRotation += delta*0.006;
 
 		rendering->RenderGame(&renderMap, &staticPropMap);
 	}
