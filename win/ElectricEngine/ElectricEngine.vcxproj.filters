@@ -60,6 +60,9 @@
     <ClCompile Include="..\..\src\Scene\StaticProp.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Controls.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Scene\Entity.hpp">
@@ -94,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Scene\StaticProp.hpp">
       <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Controls.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -18,6 +18,8 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "Skybox.hpp"
+#include "../Scene/StaticProp.hpp"
+
 #define degreesToRadians(x) x*(3.141592f/180.0f)
 
 using namespace std;
@@ -26,8 +28,6 @@ using namespace std;
 class Rendering {
 
 private:
-	map<int, vector<int>> renderMap;
-	map<int, Entity *> entityMap;
 	map<int, Mesh *> meshMap;
 	int windowWidth;
 	int windowHeight;
@@ -42,7 +42,7 @@ public:
 	void RenderText(string text, TTF_Font * font, SDL_Color color, int x, int y);
 	bool AddEntity(Entity * entity, string assetPath);
 	void ShowLoading(float progress);
-	void RenderGame();
+	void RenderGame(map<int, vector<int>> * renderMap, map<int, StaticProp *> * staticPropMap);
 	SDL_Window * window;
 	glm::vec3 playerPosition = glm::vec3(5, 0, 5);
 	glm::vec3 cameraRotation = glm::vec3(3.25501370, -0.114001535, 0);

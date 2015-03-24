@@ -4,6 +4,9 @@
 Assets * assets;
 Rendering * rendering;
 void gameloop();
+map<int, vector<int>> renderMap;
+map<int, Entity *> entityMap;
+map<int, StaticProp *> staticPropMap;
 
 int main(int argc, char * argv[]){
 	string assetPath = "../../assets/";
@@ -33,10 +36,30 @@ int main(int argc, char * argv[]){
 	for (int i = 0; i < numEntities; i++){
 		Entity & curEntity = assets->entities->at(i);
 		if (curEntity.render == true){
+			entityMap[curEntity.entityID] = &curEntity;
 			rendering->AddEntity(&curEntity, assetPath);
 		}
 		progressFunction(0.05f + ((i + 1) / (numEntities * 1.0f)) * 0.95f);
 	}
+
+	StaticProp * test = new StaticProp(2, glm::vec3(0, 0, 0));
+	test->propID = 0;
+	staticPropMap[0] = test;
+
+	StaticProp * test2 = new StaticProp(2, glm::vec3(0, 0, 5));
+	test2->propID = 1;
+	staticPropMap[1] = test2;
+
+
+	StaticProp * test3 = new StaticProp(1, glm::vec3(5, 0, 5));
+	test3->propID = 2;
+	staticPropMap[2] = test3;
+
+	renderMap[2] = vector<int>();
+	renderMap[2].push_back(0);
+	renderMap[2].push_back(1);
+	renderMap[1].push_back(2);
+
 
 	// load entities models and textures
 	progressFunction(1.0f);
@@ -49,7 +72,10 @@ void gameloop(){
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_SetRelativeMouseMode(SDL_bool::SDL_TRUE);
 
+
 	while (1){
+
+
 		SDL_Event evnt;
 		while (SDL_PollEvent(&evnt)){
 			switch (evnt.type){
@@ -84,6 +110,6 @@ void gameloop(){
 			}
 		}
 
-		rendering->RenderGame();
+		rendering->RenderGame(&renderMap, &staticPropMap);
 	}
 }

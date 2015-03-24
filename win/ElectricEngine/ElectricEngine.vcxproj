@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\Controls.cpp" />
     <ClCompile Include="..\..\src\Graphics\Mesh.cpp" />
     <ClCompile Include="..\..\src\Graphics\Rendering.cpp" />
     <ClCompile Include="..\..\src\Graphics\Shader.cpp" />
@@ -24,6 +25,7 @@
     <ClCompile Include="..\..\src\Scene\StaticProp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\Controls.hpp" />
     <ClInclude Include="..\..\src\Graphics\Geometry.hpp" />
     <ClInclude Include="..\..\src\Graphics\Mesh.hpp" />
     <ClInclude Include="..\..\src\Graphics\Rendering.hpp" />

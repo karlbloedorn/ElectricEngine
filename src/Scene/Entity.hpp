@@ -9,9 +9,6 @@ public:
 	bool render;
 	bool collide;
 	Entity();
-
-//	Position * position;
-
 private:
 	Entity(const Entity&);
 	Entity& operator=(const Entity&);

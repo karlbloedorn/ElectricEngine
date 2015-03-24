@@ -67,7 +67,6 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 bool Rendering::AddEntity(Entity * entity, string assetPath){
 	Mesh * mesh = new Mesh();
 	mesh->LoadFromObj(assetPath + "meshes/" + entity->name +"/", entity->name + ".obj", "");
-	this->entityMap[entity->entityID] = entity;
 	this->meshMap[entity->entityID] = mesh;
 	return true;
 }
@@ -118,7 +117,7 @@ void Rendering::RenderText(std::string text, TTF_Font * font, SDL_Color color, i
 	SDL_FreeSurface(sFont);
 }
 
-void Rendering::RenderGame(){
+void Rendering::RenderGame(map<int, vector<int>> * renderMap, map<int, StaticProp *> * staticPropMap){
 	auto skyboxRotation = 0.0f;
 	auto xCamRotate = glm::rotate(cameraRotation.x, glm::vec3(0, 1, 0));
 	auto yCamRotate = glm::rotate(cameraRotation.y, glm::vec3(1, 0, 0));
@@ -162,10 +161,12 @@ void Rendering::RenderGame(){
 	glUniformMatrix4fv(this->entityShader->projectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(perspective));
 	glUniformMatrix4fv(this->entityShader->viewMatrixLocation, 1, GL_FALSE, glm::value_ptr(lookat));
 
-	for (auto item : this->entityMap){
-		if (item.second->name != "plant" && item.second->name != "palmtree"){
-			this->meshMap[item.first]->RenderInstances(this->entityShader);
-
+	for (auto entity : *renderMap){
+		int entityID = entity.first;
+		vector<int> instances = entity.second;
+		
+		if (instances.size() > 0){
+			this->meshMap[entityID]->RenderInstances(this->entityShader, instances, staticPropMap);
 		}
 	}
 	this->entityShader->DisableShader();

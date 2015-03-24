@@ -128,9 +128,8 @@ bool Mesh::LoadFromObj(string basePath, string filePath, string forceTexture){
 }
 
 
-void Mesh::RenderInstances(Shader * shader)
+void Mesh::RenderInstances(Shader * shader, vector<int> renderList, map<int, StaticProp *> * staticPropMap)
 {
-
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -141,16 +140,12 @@ void Mesh::RenderInstances(Shader * shader)
 
 	glUniform1i(shader->texture0, GL_TEXTURE0);	
 	
-	glUniformMatrix4fv(shader->modelMatrixLocation, 1, GL_FALSE, glm::value_ptr(glm::translate(glm::vec3(0, 5, 0))));
-
-	// TODO do this in a loop for each instance. 
-	// Eventually do this with instanced rendering.
-	// Also need to support multiple groups for an object
-	glDrawArrays(GL_TRIANGLES, 0, this->numTriangles * 3);
-
-	glUniformMatrix4fv(shader->modelMatrixLocation, 1, GL_FALSE, glm::value_ptr(glm::translate(glm::vec3(0, 5,10))));
-	glDrawArrays(GL_TRIANGLES, 0, this->numTriangles * 3);
-
+	for (int index : renderList){
+		// Changed to instanced rendering sometime.
+		StaticProp * cur = (*staticPropMap)[index];
+		glUniformMatrix4fv(shader->modelMatrixLocation, 1, GL_FALSE, glm::value_ptr(glm::translate(cur->position)));
+		glDrawArrays(GL_TRIANGLES, 0, this->numTriangles * 3);
+	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
