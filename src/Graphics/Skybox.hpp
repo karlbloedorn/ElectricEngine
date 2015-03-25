@@ -1,6 +1,6 @@
 #pragma once
 #include <unordered_map>
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 #include "Texture.hpp"
 #include "Geometry.hpp"
 #include "Shader.hpp"

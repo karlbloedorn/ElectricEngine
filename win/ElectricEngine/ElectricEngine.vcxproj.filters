@@ -66,6 +66,9 @@
     <ClCompile Include="..\..\src\Graphics\tiny_obj_loader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\gl3w.c">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Scene\Entity.hpp">

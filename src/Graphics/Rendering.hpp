@@ -7,7 +7,7 @@
 #include <sstream>
 #include <iostream>
 #include <stdio.h>
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 #include <SDL.h>
 #include <SDL_ttf.h>
 #ifdef __APPLE__

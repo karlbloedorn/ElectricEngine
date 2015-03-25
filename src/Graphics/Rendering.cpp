@@ -26,13 +26,17 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 		error = string("Failed to start graphics subsystem");
 		return false;
 	}
-	glewExperimental = GL_TRUE;
-
-	auto glewinit = glewInit();
-	if (glewinit != GLEW_OK){
-		error = string("Failed to start graphics subsystem");
-		return false;
+	if (gl3wInit()) {
+		fprintf(stderr, "failed to initialize OpenGL\n");
+		return -1;
 	}
+	if (!gl3wIsSupported(3, 2)) {
+		fprintf(stderr, "OpenGL 3.2 not supported\n");
+		return -1;
+	}
+	printf("OpenGL %s, GLSL %s\n", glGetString(GL_VERSION),
+		glGetString(GL_SHADING_LANGUAGE_VERSION));
+
 	if (TTF_Init() == -1) {
 		printf("TTF_Init: %s\n", TTF_GetError());
 		exit(1);
@@ -99,7 +103,7 @@ bool Rendering::AddEntity(Entity * entity, string assetPath){
 }
 
 void Rendering::ShowLoading(float progress){
-
+	/*
 	glEnable(GL_ALPHA_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -119,10 +123,12 @@ void Rendering::ShowLoading(float progress){
 	this->RenderText("Loading", this->roboto50, SDL_Color{ 255, 255, 25 }, 10, 10);
 	this->RenderText(stringstream.str(), this->roboto200, SDL_Color{ 255, 255, 255 }, 10, 70);
 	SDL_GL_SwapWindow(window);
+	*/
 }
 
 void Rendering::RenderText(std::string text, TTF_Font * font, SDL_Color color, int x, int y)
 {
+	/*
 	SDL_Surface * sFont = TTF_RenderText_Blended(font, text.c_str(), color);
 	GLuint texture;
 	glGenTextures(1, &texture);
@@ -141,7 +147,7 @@ void Rendering::RenderText(std::string text, TTF_Font * font, SDL_Color color, i
 	}
 	glEnd();
 	glDeleteTextures(1, &texture);
-	SDL_FreeSurface(sFont);
+	SDL_FreeSurface(sFont);*/
 }
 
 void Rendering::RenderGame(map<int, vector<int>> * renderMap, map<int, StaticProp *> * staticPropMap){

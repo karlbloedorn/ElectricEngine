@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL_image.h>
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 #include <string>
 #include <iostream>
 using namespace std;
