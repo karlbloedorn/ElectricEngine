@@ -28,7 +28,7 @@ find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
-include_directories(${SDL2_INCLUDE_DIR} ${JSONCPP_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${GLEW_INCLUDE_PATH})
+include_directories(${SDL2_INCLUDE_DIR} ${JSONCPP_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${GLEW_INCLUDE_PATH} ${ElectricEngine_SOURCE_DIR}/includes)
 
 # Look in the src subdirectory to find its CMakeLists.txt so we can build the executable
 add_subdirectory(src)

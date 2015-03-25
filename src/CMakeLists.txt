@@ -3,6 +3,7 @@ file(GLOB SUB_SRCS
 	"Graphics/*.cpp"
 	"Scene/*.cpp"
 	"*.cpp"
+	"Graphics/*.c"
 )
 
 add_executable(EETestGame Main.cpp ${SUB_SRCS})
