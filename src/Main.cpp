@@ -50,10 +50,6 @@ int main(int argc, char * argv[]){
 		progressFunction(0.05f + ((i + 1) / (numEntities * 1.0f)) * 0.95f);
 	}
 
-	StaticProp * test = new StaticProp(2, glm::vec3(0, 0, 0));
-	test->propID = 0;
-	staticPropMap[0] = test;
-
 	StaticProp * test2 = new StaticProp(2, glm::vec3(0, 0, 5));
 	test2->propID = 1;
 	staticPropMap[1] = test2;
@@ -64,10 +60,18 @@ int main(int argc, char * argv[]){
 	staticPropMap[2] = test3;
 
 	renderMap[2] = vector<int>();
-	renderMap[2].push_back(0);
 	renderMap[2].push_back(1);
 	renderMap[1].push_back(2);
 
+	int count = 30;
+	for (int i = 0; i <count; i++){
+		for (int j = 0; j < count; j++){
+			StaticProp * test = new StaticProp(2, glm::vec3(i * 5, 0, j * 5));
+			test->propID = i*count + j;
+			staticPropMap[i *count + j] = test;
+			renderMap[2].push_back(i * count + j);
+		}
+	}
 
 	// load entities models and textures
 	progressFunction(1.0f);

@@ -15,6 +15,7 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
 	this->window = SDL_CreateWindow("Test Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->windowWidth, this->windowHeight, opts);
 	if (window == nullptr){
 		error = string("Failed to start windowing subsystem");
@@ -84,11 +85,9 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 	glBindVertexArray(vao);
 
 
-
-
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	glClearColor(0.1, 0.1, 0.1, 1.0);
-	glEnable(GL_TEXTURE_2D);
+
 	return true;
 }
 
@@ -146,11 +145,11 @@ void Rendering::RenderText(std::string text, TTF_Font * font, SDL_Color color, i
 }
 
 void Rendering::RenderGame(map<int, vector<int>> * renderMap, map<int, StaticProp *> * staticPropMap){
-	glEnable(GL_ALPHA_TEST);
+//	glEnable(GL_ALPHA_TEST);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glAlphaFunc(GL_GREATER, 0.1);
+//	glAlphaFunc(GL_GREATER, 0.1);
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

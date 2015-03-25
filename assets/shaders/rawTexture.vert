@@ -1,4 +1,4 @@
-#version 330
+#version 330 core
 
 in vec3 in_Position;
 in vec2 in_TextureCoord;
