@@ -38,6 +38,7 @@ private:
 	TTF_Font * roboto200;
 	Skybox * skybox;
 	Grid * grid;
+	Shader * rawTextureShader;
 	Shader * entityShader;
 	Shader * terrainShader;
 public:

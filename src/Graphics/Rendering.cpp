@@ -13,7 +13,7 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 	}  
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	this->window = SDL_CreateWindow("Test Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->windowWidth, this->windowHeight, opts);
 	if (window == nullptr){
@@ -25,6 +25,8 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 		error = string("Failed to start graphics subsystem");
 		return false;
 	}
+	glewExperimental = GL_TRUE;
+
 	auto glewinit = glewInit();
 	if (glewinit != GLEW_OK){
 		error = string("Failed to start graphics subsystem");
@@ -45,8 +47,23 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 		printf("TTF_OpenFont: %s\n", TTF_GetError());
 		exit(1);
 	}
-	this->skybox = new Skybox(assetPath);
+	this->skybox = new Skybox();
+	this->skybox->Load(assetPath);
+
 	this->grid = new Grid();
+
+	this->rawTextureShader = new Shader();
+	this->rawTextureShader->SetupShader(assetPath + "shaders/rawTexture.vert", assetPath + "shaders/rawTexture.frag",
+	list < string > {
+		"in_Position",
+		"in_TextureCoord",
+	},
+	list < string > {
+			"projectionMatrix",
+				"modelMatrix",
+				"viewMatrix",
+				"texture0"
+	});
 
 	this->entityShader = new Shader();
 	this->entityShader->SetupShader(assetPath + "shaders/entities.vert", assetPath + "shaders/entities.frag",
@@ -62,6 +79,9 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 				"texture0"
 	});
 
+	GLuint vao;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
 
 
 
@@ -141,27 +161,23 @@ void Rendering::RenderGame(map<int, vector<int>> * renderMap, map<int, StaticPro
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
 	auto perspective = glm::perspectiveFov<float>(1.27, windowWidth, windowHeight, 0.1f, 5000.0f);
-	glLoadMatrixf(glm::value_ptr(perspective));
-	glMatrixMode(GL_MODELVIEW);
+
+	// Skybox rendering
+	this->rawTextureShader->EnableShader();
 	auto skyboxPosition = glm::translate(cameraPosition);
-	auto combinedSkyboxMat = lookAt*skyboxPosition;
-	auto rotate = glm::rotate(combinedSkyboxMat, skyboxRotation, glm::vec3(0, 1, 0));
-	glLoadMatrixf(glm::value_ptr(rotate));
-	skybox->Render();
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	auto skyboxRotate = glm::rotate(skyboxPosition, skyboxRotation, glm::vec3(0, 1, 0));
+	glUniformMatrix4fv(this->entityShader->projectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(perspective));
+	glUniformMatrix4fv(this->entityShader->viewMatrixLocation, 1, GL_FALSE, glm::value_ptr(lookAt));
+	glUniformMatrix4fv(this->entityShader->modelMatrixLocation, 1, GL_FALSE, glm::value_ptr(skyboxRotate));
+	skybox->Render(this->rawTextureShader);
+	this->rawTextureShader->DisableShader();
 
-
+	// Terrain rendering
 	//this->terrainShader->EnableShader();
 	//this->terrainShader->DisableShader();
 
-
-
+	// Entity rendering
 	this->entityShader->EnableShader();
 	glUniformMatrix4fv(this->entityShader->projectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(perspective));
 	glUniformMatrix4fv(this->entityShader->viewMatrixLocation, 1, GL_FALSE, glm::value_ptr(lookAt));
@@ -175,7 +191,5 @@ void Rendering::RenderGame(map<int, vector<int>> * renderMap, map<int, StaticPro
 		}
 	}
 	this->entityShader->DisableShader();
-
 	SDL_GL_SwapWindow(window);
-
 }

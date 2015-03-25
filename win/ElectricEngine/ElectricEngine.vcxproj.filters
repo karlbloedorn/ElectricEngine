@@ -45,9 +45,6 @@
     <ClCompile Include="..\..\src\Scene\Assets.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Graphics\tiny_obj_loader.cc">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Graphics\Mesh.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -66,6 +63,9 @@
     <ClCompile Include="..\..\src\Graphics\Grid.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\tiny_obj_loader.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Scene\Entity.hpp">
@@ -82,9 +82,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Scene\Assets.hpp">
       <Filter>Header Files\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Graphics\tiny_obj_loader.h">
-      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Graphics\Mesh.hpp">
       <Filter>Header Files\Graphics</Filter>
@@ -105,6 +102,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Graphics\Grid.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Graphics\tiny_obj_loader.hpp">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
