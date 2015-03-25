@@ -15,7 +15,7 @@
 #  include <OpenGL/GLU.h>
 #else
 #  include <GL/gl.h>
-#  include <GL/GLU.h>
+#  include <GL/glu.h>
 #endif/*__APPLE__*/
 #include "../Scene/Entity.hpp"
 #include "Mesh.hpp"
