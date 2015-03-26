@@ -54,8 +54,8 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 	}
 	this->skybox = new Skybox();
 	this->skybox->Load(assetPath);
-
 	this->grid = new Grid();
+	this->grid->Load(assetPath);
 
 	this->rawTextureShader = new Shader();
 	this->rawTextureShader->SetupShader(assetPath + "shaders/rawTexture.vert", assetPath + "shaders/rawTexture.frag",
@@ -84,6 +84,25 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 				"texture0"
 	});
 
+
+	this->terrainShader = new Shader();
+	this->terrainShader->SetupShader(assetPath + "shaders/terrain.vert", assetPath + "shaders/terrain.frag",
+		list < string > {
+		"in_Position"
+	},
+	list < string > {
+			"projectionMatrix",
+				"modelMatrix",
+				"viewMatrix",
+				"texture0",
+				"texture1",
+				"texture2",
+				"texture3",
+				"texture4",
+				"texture5"
+		});
+
+
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -91,6 +110,7 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	glClearColor(0.1, 0.1, 0.1, 1.0);
+
 
 	return true;
 }
@@ -178,9 +198,17 @@ void Rendering::RenderGame(map<int, vector<int>> * renderMap, map<int, StaticPro
 	skybox->Render(this->rawTextureShader);
 	this->rawTextureShader->DisableShader();
 
+
 	// Terrain rendering
-	//this->terrainShader->EnableShader();
-	//this->terrainShader->DisableShader();
+	this->terrainShader->EnableShader();
+
+	glUniformMatrix4fv(this->terrainShader->projectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(perspective));
+	glUniformMatrix4fv(this->terrainShader->viewMatrixLocation, 1, GL_FALSE, glm::value_ptr(lookAt));
+	
+	grid->RenderInstances(this->terrainShader, this->cameraPosition);
+	this->terrainShader->DisableShader();
+
+
 
 	// Entity rendering
 	this->entityShader->EnableShader();

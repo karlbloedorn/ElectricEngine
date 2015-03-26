@@ -32,4 +32,5 @@ public:
 	GLuint texture2;
 	GLuint texture3;
 	GLuint texture4;
+	GLuint texture5;
 };

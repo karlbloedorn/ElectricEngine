@@ -28,12 +28,11 @@ struct Triangle{
 	Vertex b;
 	Vertex c;
 };
-
-struct Triangle2D{
-	Vertex a;
-	Vertex b;
-	Vertex c;
-};
 struct Vertex2D{
-	Position position;
+	Position2D position;
+};
+struct Triangle2D{
+	Vertex2D a;
+	Vertex2D b;
+	Vertex2D c;
 };

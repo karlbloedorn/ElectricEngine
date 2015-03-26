@@ -11,7 +11,7 @@ map<int, Entity *> entityMap;
 map<int, StaticProp *> staticPropMap;
 glm::vec3 playerPosition = glm::vec3(10, 0, 10);
 
-float playerSpeed = 20.0f;
+float playerSpeed = 220.0f;
 
 
 int main(int argc, char * argv[]){
@@ -50,6 +50,8 @@ int main(int argc, char * argv[]){
 		progressFunction(0.05f + ((i + 1) / (numEntities * 1.0f)) * 0.95f);
 	}
 
+
+
 	StaticProp * test2 = new StaticProp(2, glm::vec3(0, 0, 5));
 	test2->propID = 1;
 	staticPropMap[1] = test2;
@@ -59,17 +61,30 @@ int main(int argc, char * argv[]){
 	test3->propID = 2;
 	staticPropMap[2] = test3;
 
+	/*
+	StaticProp * test1 = new StaticProp(4, glm::vec3(55, 0, 55));
+	test1->propID = 3;
+	staticPropMap[3] = test2;*/
+
+	StaticProp * test4 = new StaticProp(5, glm::vec3(10, 0, 10));
+	test4->propID = 4;
+	staticPropMap[4] = test4;
+
+
 	renderMap[2] = vector<int>();
 	renderMap[2].push_back(1);
 	renderMap[1].push_back(2);
+	//renderMap[4].push_back(3);
+
+	//renderMap[5].push_back(4);
 
 	int count = 30;
 	for (int i = 0; i <count; i++){
 		for (int j = 0; j < count; j++){
-			StaticProp * test = new StaticProp(2, glm::vec3(i * 5, 0, j * 5));
-			test->propID = i*count + j;
-			staticPropMap[i *count + j] = test;
-			renderMap[2].push_back(i * count + j);
+			//StaticProp * test = new StaticProp(2, glm::vec3(i * 5, 0, j * 5));
+			//test->propID = i*count + j;
+			//staticPropMap[i *count + j] = test;
+			//renderMap[2].push_back(i * count + j);
 		}
 	}
 
@@ -115,5 +130,7 @@ void gameloop(){
 		rendering->skyboxRotation += delta*0.006;
 
 		rendering->RenderGame(&renderMap, &staticPropMap);
+
+
 	}
 }

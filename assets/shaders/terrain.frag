@@ -1,14 +1,17 @@
 #version 330 core
 
-uniform sampler2D texture0;
-uniform sampler2D texture1;
-uniform sampler2D texture2;
-uniform sampler2D texture3;
-uniform sampler2D texture4;
+in vec2 pass_BlendTextureCoordinates;
+
+
+uniform lowp sampler2D texture0;
+uniform lowp sampler2D texture1;
+uniform lowp sampler2D texture2;
+uniform lowp sampler2D texture3;
+uniform lowp sampler2D texture4;
+uniform lowp sampler2D texture5;
 
 in vec2 pass_Texture;
 in vec3 pass_Normal;
-in vec2 pass_BlendTextureCoordinates;
 
 out vec4 FragColor;
 
@@ -20,13 +23,11 @@ const vec4 specColor = vec4(1.0, 1.0, 1.0,1.0);
 void main()
 {
 	vec3 ct,cf;
-
     float intensity,at,af;
     intensity = max(dot(lightPos,normalize(pass_Normal)),0.0);
     cf = intensity * diffuseColor.rgb +  ambientColor.rgb;
     af = diffuseColor.a;
-	
-	vec4 blendMapColor = texture(texture0,pass_BlendTextureCoordinates);
+	vec4 blendMapColor = texture(texture5,pass_BlendTextureCoordinates);
 	float backTextureAmount = 1 - ( blendMapColor.r +  blendMapColor.g +  blendMapColor.b);
 	vec4 colorBack = texture2D(texture1, pass_Texture) * backTextureAmount;
 	vec4 colorR = texture2D(texture2, pass_Texture) * blendMapColor.r;

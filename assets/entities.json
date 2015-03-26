@@ -18,5 +18,16 @@
 	"entityID": 3,
 	"name" : "palmtree",
 	"render": true
+	},
+	{
+	"entityID": 4,
+	"name" : "fence",
+	"render": true
+	},
+	{
+	"entityID": 5,
+	"name" : "barrel",
+	"render": true
 	}
+
 ]

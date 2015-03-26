@@ -14,6 +14,7 @@ Shader::~Shader()
 
 bool Shader::SetupShader(const string & vertexPath, const string & fragmentPath, list<string> attributes, list<string> uniforms){
 	// Compile the shaders
+
 	vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 	if (vertexShaderID == 0) {
@@ -28,6 +29,7 @@ bool Shader::SetupShader(const string & vertexPath, const string & fragmentPath,
 	bool fragmentSuccess = CompileShader(fragmentPath, fragmentShaderID);
 	if (!vertexSuccess || !fragmentSuccess){
 		printf("error: failed to compile a shader\n");
+		exit(1);
 		return false;
 	}
 	programID = glCreateProgram();
@@ -44,6 +46,7 @@ bool Shader::SetupShader(const string & vertexPath, const string & fragmentPath,
 	glGetProgramiv(programID, GL_LINK_STATUS, (int *)&isLinked);
 	if (isLinked == GL_FALSE)
 	{
+		
 		GLint maxLength = 0;
 		glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &maxLength);
 		std::vector<char> errorLog(maxLength);
@@ -64,8 +67,7 @@ bool Shader::SetupShader(const string & vertexPath, const string & fragmentPath,
 	for (string uniform : uniforms){
 		GLuint location = glGetUniformLocation(programID, uniform.c_str());
 		if (location == GL_INVALID_INDEX){
-			printf("error: uniform %c is invalid\n", uniform.c_str());
-			return false;
+			printf("error: uniform %s is invalid\n", uniform.c_str());
 		}
 		if (uniform == "projectionMatrix"){
 			this->projectionMatrixLocation = location;
@@ -91,6 +93,9 @@ bool Shader::SetupShader(const string & vertexPath, const string & fragmentPath,
 		else if (uniform == "texture4"){
 			this->texture4 = location;
 		}
+		else if (uniform == "texture5"){
+			this->texture5 = location;
+		}		
 	}
 	return true;
 }

@@ -17,9 +17,9 @@ class Grid {
 public:
 	Grid();
 	Triangle2D * triangles;
-	bool Load();
+	bool Load(string assetsPath);
 	int numTriangles;
-	void RenderInstances(Shader * shader);
+	void RenderInstances(Shader * shader, glm::vec3 cameraPosition);
 	GLuint vbo;
-	GLuint texture;
+	GLuint textures[6];
 };
