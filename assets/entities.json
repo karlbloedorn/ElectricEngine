@@ -1,0 +1,33 @@
+[
+	{
+	"entityID": 0,
+	"name": "plant",
+	"render": true
+	},
+	{
+	"entityID": 1,
+	"name" : "rock",
+	"render": true
+	},
+	{
+	"entityID": 2,
+	"name" : "well",
+	"render" : true 
+	},
+	{
+	"entityID": 3,
+	"name" : "palmtree",
+	"render": true
+	},
+	{
+	"entityID": 4,
+	"name" : "fence",
+	"render": true
+	},
+	{
+	"entityID": 5,
+	"name" : "barrel",
+	"render": true
+	}
+
+]
