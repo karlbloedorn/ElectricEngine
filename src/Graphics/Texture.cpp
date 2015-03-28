@@ -27,20 +27,25 @@ void Texture::SetupTexture(GLuint texture, string filePath, bool allowWrap){
 //	SDL_SaveBMP(surface, "test.bmp");
 
 	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	if (!allowWrap){
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	}
 
+	glTexImage2D(GL_TEXTURE_2D, 0, (GLint)GL_RGB8, surface->w,
+		surface->h, 0, textureFormat, GL_UNSIGNED_BYTE, surface->pixels);
 	// GL_RGB8 was previously surface->format->BytesPerPixel, but this doesn't work with core profile.
 	// Maybe there should be logic here to decide what to use.
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, surface->w,
-		surface->h, 0, textureFormat, GL_UNSIGNED_BYTE, surface->pixels);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLint)GL_LINEAR_MIPMAP_LINEAR);
 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLint)GL_LINEAR);
+
+	if (!allowWrap){
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (GLint)GL_CLAMP_TO_EDGE);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (GLint)GL_CLAMP_TO_EDGE);
+	}
+
+	glTexParameterf(GL_TEXTURE_2D, (GLenum) GL_TEXTURE_MAX_ANISOTROPY_EXT, 16);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	SDL_FreeSurface(surface);
 

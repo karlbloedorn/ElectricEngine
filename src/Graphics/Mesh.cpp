@@ -9,7 +9,7 @@ bool Mesh::LoadFromObj(string basePath, string filePath, string forceTexture){
 
 	std::string err = tinyobj::LoadObj(shapes, materials, (basePath + filePath).c_str(), basePath.c_str());
 	if (err.length() > 0){
-		cout << "Could not load mesh from object file. Path: " << filePath << endl;
+		cout << "Could not load a mesh from object file. Path: " << filePath << endl;
 		exit(1);
 	}
 	std::cout << "# of shapes    : " << shapes.size() << std::endl;
@@ -114,7 +114,7 @@ void Mesh::RenderInstances(Shader * shader, vector<int> renderList, map<int, Sta
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, position));
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, textureCoord));
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)offsetof(Vertex, normal));
-	glUniform1i(shader->texture0, GL_TEXTURE0);	
+	glUniform1i(shader->texture0, 0);	
 	
 	for (int index : renderList){
 		// Changed to instanced rendering sometime.

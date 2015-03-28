@@ -75,7 +75,7 @@ void Skybox::Render(Shader * shader)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float)*5, 0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (const GLvoid *)(sizeof(float) * 3));
-	glUniform1i(shader->texture0, GL_TEXTURE0);
+	glUniform1i(shader->texture0, 0);
 	//negx 0, negy 1, negz 2, posx 3, posy 4, posz 5
 	
 	for (int i = 0; i < 6; i++){

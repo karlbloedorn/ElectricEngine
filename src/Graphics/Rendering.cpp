@@ -11,7 +11,8 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 	if (fullScreen){
 		opts = opts | SDL_WINDOW_FULLSCREEN;
 	}  
-
+	//SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+	//SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 16);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -26,6 +27,7 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 		error = string("Failed to start graphics subsystem");
 		return false;
 	}
+	/*
 	if (gl3wInit()) {
 		fprintf(stderr, "failed to initialize OpenGL\n");
 		return -1;
@@ -33,7 +35,9 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 	if (!gl3wIsSupported(3, 2)) {
 		fprintf(stderr, "OpenGL 3.2 not supported\n");
 		return -1;
-	}
+	}*/
+
+	glbinding::Binding::initialize();
 	printf("OpenGL %s, GLSL %s\n", glGetString(GL_VERSION),
 		glGetString(GL_SHADING_LANGUAGE_VERSION));
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <GL/gl3w.h>
+#include "OpenGL33.hpp"
 #include <glm/glm.hpp>
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
@@ -10,6 +10,7 @@
 #include "Texture.hpp"
 #include "Geometry.hpp"
 #include "../Scene/StaticProp.hpp"
+
 
 using namespace std;
 

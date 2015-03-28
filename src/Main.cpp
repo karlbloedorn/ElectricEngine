@@ -9,9 +9,9 @@ void gameloop();
 map<int, vector<int>> renderMap;
 map<int, Entity *> entityMap;
 map<int, StaticProp *> staticPropMap;
-glm::vec3 playerPosition = glm::vec3(10, 0, 10);
+glm::vec3 playerPosition = glm::vec3(440, 50, 420);
 
-float playerSpeed = 220.0f;
+float playerSpeed = 20.0f;
 
 
 int main(int argc, char * argv[]){
@@ -50,30 +50,20 @@ int main(int argc, char * argv[]){
 		progressFunction(0.05f + ((i + 1) / (numEntities * 1.0f)) * 0.95f);
 	}
 
-
-
-	StaticProp * test2 = new StaticProp(2, glm::vec3(0, 0, 5));
+	StaticProp * test2 = new StaticProp(2, glm::vec3(450,55, 410));
 	test2->propID = 1;
 	staticPropMap[1] = test2;
 
-
-	StaticProp * test3 = new StaticProp(1, glm::vec3(5, 0, 5));
+	StaticProp * test3 = new StaticProp(1, glm::vec3(450, 47.5, 405));
 	test3->propID = 2;
 	staticPropMap[2] = test3;
-
-	/*
-	StaticProp * test1 = new StaticProp(4, glm::vec3(55, 0, 55));
-	test1->propID = 3;
-	staticPropMap[3] = test2;*/
-
-	StaticProp * test4 = new StaticProp(5, glm::vec3(10, 0, 10));
-	test4->propID = 4;
-	staticPropMap[4] = test4;
 
 
 	renderMap[2] = vector<int>();
 	renderMap[2].push_back(1);
 	renderMap[1].push_back(2);
+
+
 	//renderMap[4].push_back(3);
 
 	//renderMap[5].push_back(4);
