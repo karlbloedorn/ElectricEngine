@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include <GL/gl3w.h>
+#include "OpenGL33.hpp"
 #include <vector>
 #include <fstream>
 #include <iostream>
@@ -8,7 +8,7 @@
 #include <list>
 
 using namespace std;
-
+using namespace gl33core;
 class Shader
 {
 private:

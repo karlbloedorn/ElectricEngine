@@ -9,8 +9,8 @@ bool Grid::Load(string assetsPath){
 	Texture::SetupTexture(textures[0], assetsPath + "textures/heightmap.png", true);
 	Texture::SetupTexture(textures[1], assetsPath + "textures/terrain/130713 089x2 scb01.png", true);
 	Texture::SetupTexture(textures[2], assetsPath + "textures/terrain/paving 2.png", true);
-	Texture::SetupTexture(textures[3], assetsPath + "textures/terrain/ground_mud_d.jpg", true);
-	Texture::SetupTexture(textures[4], assetsPath + "textures/terrain/grass_green_d.jpg", true);
+	Texture::SetupTexture(textures[3], assetsPath + "textures/terrain/lava2_d.jpg", true);
+	Texture::SetupTexture(textures[4], assetsPath + "textures/terrain/lava2_d.jpg", true);
 	Texture::SetupTexture(textures[5], assetsPath + "textures/texturemap.png", true);
 
 
@@ -87,10 +87,10 @@ void Grid::RenderInstances(Shader * shader, glm::vec3 cameraPosition)
 
 	int x = cameraPosition.x / chunkSize;
 	int z = cameraPosition.z / chunkSize;
-	int startx = x - 25;
-	int endx = x + 25;
-	int startz = z - 25;
-	int endz = z + 25;
+	int startx = x - 15;
+	int endx = x + 15;
+	int startz = z - 15;
+	int endz = z + 15;
 
 	for (int x = startx; x < endx; x++){
 		for (int z = startz; z < endz; z++){

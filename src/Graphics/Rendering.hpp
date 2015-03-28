@@ -7,16 +7,9 @@
 #include <sstream>
 #include <iostream>
 #include <stdio.h>
-#include <GL/gl3w.h>
+#include "OpenGL33.hpp"
 #include <SDL.h>
 #include <SDL_ttf.h>
-#ifdef __APPLE__
-#  include <OpenGL/gl.h>
-#  include <OpenGL/GLU.h>
-#else
-#  include <GL/gl.h>
-#  include <GL/glu.h>
-#endif/*__APPLE__*/
 #include "../Scene/Entity.hpp"
 #include "Mesh.hpp"
 #include "Grid.hpp"
@@ -27,6 +20,7 @@
 #include "../Scene/StaticProp.hpp"
 
 using namespace std;
+using namespace gl33core;
 
 class Rendering {
 

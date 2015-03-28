@@ -42,9 +42,9 @@ bool Shader::SetupShader(const string & vertexPath, const string & fragmentPath,
 	glAttachShader(programID, vertexShaderID);
 	glAttachShader(programID, fragmentShaderID);
 	glLinkProgram(programID);
-	GLint isLinked = 0;
-	glGetProgramiv(programID, GL_LINK_STATUS, (int *)&isLinked);
-	if (isLinked == GL_FALSE)
+	int isLinked = 0;
+	glGetProgramiv(programID, GL_LINK_STATUS,&isLinked);
+	if (isLinked == 0)
 	{
 		
 		GLint maxLength = 0;
@@ -130,7 +130,7 @@ bool Shader::CompileShader(const std::string& filePath, GLuint id) {
 	glCompileShader(id);
 	GLint success = 0;
 	glGetShaderiv(id, GL_COMPILE_STATUS, &success);
-	if (success == GL_FALSE)
+	if (success == 0)
 	{
 		GLint maxLength = 0;
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);

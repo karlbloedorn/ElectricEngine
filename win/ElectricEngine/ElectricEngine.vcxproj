@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Controls.cpp" />
-    <ClCompile Include="..\..\src\Graphics\gl3w.c" />
     <ClCompile Include="..\..\src\Graphics\Grid.cpp" />
     <ClCompile Include="..\..\src\Graphics\Mesh.cpp" />
     <ClCompile Include="..\..\src\Graphics\Rendering.cpp" />
@@ -31,6 +30,7 @@
     <ClInclude Include="..\..\src\Graphics\Geometry.hpp" />
     <ClInclude Include="..\..\src\Graphics\Grid.hpp" />
     <ClInclude Include="..\..\src\Graphics\Mesh.hpp" />
+    <ClInclude Include="..\..\src\Graphics\OpenGL33.hpp" />
     <ClInclude Include="..\..\src\Graphics\Rendering.hpp" />
     <ClInclude Include="..\..\src\Graphics\Shader.hpp" />
     <ClInclude Include="..\..\src\Graphics\Skybox.hpp" />
@@ -82,10 +82,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_ttf.lib;SDL2_image.lib;SDL2_net.lib;opengl32.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_ttf.lib;SDL2_image.lib;SDL2_net.lib;opengl32.lib;jsoncpp.lib;fmod_vc.lib;glbinding.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -96,12 +97,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_ttf.lib;SDL2_image.lib;SDL2_net.lib;opengl32.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_ttf.lib;SDL2_image.lib;SDL2_net.lib;opengl32.lib;jsoncpp.lib;fmod_vc.lib;glbinding.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>

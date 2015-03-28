@@ -22,7 +22,7 @@ void Assets::LoadEntities(){
 	}
 	this->entities = new vector<Entity>(root.size());
 
-	for (int index = 0; index < root.size(); ++index) {
+	for (unsigned int index = 0; index < root.size(); ++index) {
 		auto v = root[index];
 		int id = v.get("entityID", -1).asInt();
 		std::string name = v.get("name", "").asString();

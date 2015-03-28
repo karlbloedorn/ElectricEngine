@@ -1,9 +1,11 @@
 #pragma once
 #include <unordered_map>
-#include <GL/gl3w.h>
+#include "OpenGL33.hpp"
 #include "Texture.hpp"
 #include "Geometry.hpp"
 #include "Shader.hpp"
+
+using namespace gl33core;
 
 class Skybox
 {
@@ -16,4 +18,5 @@ public:
 	Skybox();
 	bool Load(std::string assetsPath);
 	void Render(Shader * shader);
+
 };

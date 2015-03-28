@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <GL/gl3w.h>
+#include <glbinding/gl/functions33core.h>
 #include <glm/glm.hpp>
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
@@ -13,6 +13,7 @@
 #include "../Scene/StaticProp.hpp"
 
 using namespace std;
+using namespace gl33core;
 
 class Mesh {
 public:

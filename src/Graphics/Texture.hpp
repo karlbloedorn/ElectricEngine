@@ -1,10 +1,10 @@
 #pragma once
 #include <SDL_image.h>
-#include <GL/gl3w.h>
+#include "OpenGL33.hpp"
 #include <string>
 #include <iostream>
 using namespace std;
-
+using namespace gl33core;
 class Texture {
 
 public:
