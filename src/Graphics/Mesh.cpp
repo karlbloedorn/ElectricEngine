@@ -119,7 +119,11 @@ void Mesh::RenderInstances(Shader * shader, vector<int> renderList, map<int, Sta
 	for (int index : renderList){
 		// Changed to instanced rendering sometime.
 		StaticProp * cur = (*staticPropMap)[index];
-		glUniformMatrix4fv(shader->modelMatrixLocation, 1, GL_FALSE, glm::value_ptr(glm::translate(cur->position)));
+
+		auto translate = glm::translate(cur->position);
+		auto rotate = glm::rotate(cur->Yrotation, glm::vec3(0, 1, 0));
+
+		glUniformMatrix4fv(shader->modelMatrixLocation, 1, GL_FALSE, glm::value_ptr(translate*rotate));
 		glDrawArrays(GL_TRIANGLES, 0, this->numTriangles * 3);
 	}
 

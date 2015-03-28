@@ -11,6 +11,7 @@ public:
 	int propID;
 	bool hidden = false;
 	glm::vec3 position;
+  float Yrotation;
 
 private:
 	StaticProp(const StaticProp&);

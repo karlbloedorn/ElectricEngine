@@ -1,10 +1,12 @@
 #include "Scene/Assets.hpp"
 #include "Graphics/Rendering.hpp"
+#include "Audio/Sound.hpp"
 #include "Controls.hpp"
 
 Controls * controls;
 Assets * assets;
 Rendering * rendering;
+Sound * sound;
 void gameloop();
 map<int, vector<int>> renderMap;
 map<int, Entity *> entityMap;
@@ -12,7 +14,9 @@ map<int, StaticProp *> staticPropMap;
 glm::vec3 playerPosition = glm::vec3(440, 50, 420);
 
 float playerSpeed = 20.0f;
-
+float gametime = 0;
+//testing
+StaticProp * bird;
 
 int main(int argc, char * argv[]){
 	string assetPath = "../../assets/";
@@ -27,6 +31,9 @@ int main(int argc, char * argv[]){
 		cout << initError << endl;
 		exit(1);
 	}
+	sound = new Sound();
+	sound->Setup(assetPath);
+
 
 	// show menu
 	std::function<void(float)> progressFunction = [](float percent) {
@@ -50,22 +57,26 @@ int main(int argc, char * argv[]){
 		progressFunction(0.05f + ((i + 1) / (numEntities * 1.0f)) * 0.95f);
 	}
 
-	StaticProp * test2 = new StaticProp(2, glm::vec3(450,55, 410));
+	StaticProp * test2 = new StaticProp(2, glm::vec3(450,18.4, 410));
 	test2->propID = 1;
 	staticPropMap[1] = test2;
 
-	StaticProp * test3 = new StaticProp(1, glm::vec3(450, 47.5, 405));
+	StaticProp * test3 = new StaticProp(1, glm::vec3(450, 11.5, 405));
 	test3->propID = 2;
 	staticPropMap[2] = test3;
+
+	bird = new StaticProp(7, glm::vec3(450, 47.5, 405));
+	bird->propID = 3;
+	staticPropMap[3] = bird;
 
 
 	renderMap[2] = vector<int>();
 	renderMap[2].push_back(1);
 	renderMap[1].push_back(2);
+	renderMap[7].push_back(3);
 
 
 	//renderMap[4].push_back(3);
-
 	//renderMap[5].push_back(4);
 
 	int count = 30;
@@ -91,6 +102,8 @@ void gameloop(){
 
 	while (1){
 		float delta = controls->GetInput();
+		gametime += delta;
+
 		if (controls->quit){
 			return;
 		}
@@ -113,14 +126,23 @@ void gameloop(){
 		auto bothRotate = xCamRotate * yCamRotate;
 		auto lookVector = bothRotate * glm::vec4(0, 0, 1, 0);
 		auto cameraPosition = playerPosition + glm::vec3(0, 12, 0);
-
-		auto lookat = glm::lookAt(cameraPosition, glm::vec3(lookVector) + cameraPosition, glm::vec3(0.0, 1.0, 0.0));
+		auto upVector = glm::vec3(0.0, 1.0, 0.0);
+		auto lookat = glm::lookAt(cameraPosition, glm::vec3(lookVector) + cameraPosition, upVector);
 		rendering->lookAt = lookat;
 		rendering->cameraPosition = cameraPosition;
 		rendering->skyboxRotation += delta*0.006;
 
 		rendering->RenderGame(&renderMap, &staticPropMap);
+		
 
+		//bird testing
+		float radius = 60+ sin(gametime / 5) * 10;
+		float theta = gametime;
+		float x = 400+ radius * cos(theta);
+		float z = 400 + radius * sin(theta);
 
+		bird->position = glm::vec3(x, 50, z );
+		bird->Yrotation = -theta;
+		sound->Update(cameraPosition,  glm::vec3(lookVector* -1.0f), upVector, bird->position);
 	}
 }

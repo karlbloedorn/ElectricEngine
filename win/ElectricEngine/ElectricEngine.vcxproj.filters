@@ -25,6 +25,12 @@
     <Filter Include="Source Files\Graphics">
       <UniqueIdentifier>{b30609e3-7397-40d6-bfdc-da2ace3b8c69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Audio">
+      <UniqueIdentifier>{51374a24-e740-456c-b7c2-497b2b15fc9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Audio">
+      <UniqueIdentifier>{2a46f3d1-ff22-4455-a8f9-e592158614b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Main.cpp">
@@ -65,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Graphics\tiny_obj_loader.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Audio\Sound.cpp">
+      <Filter>Source Files\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Graphics\OpenGL33.hpp">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Audio\Sound.hpp">
+      <Filter>Header Files\Audio</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

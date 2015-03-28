@@ -28,6 +28,15 @@
 	"entityID": 5,
 	"name" : "barrel",
 	"render": true
+	},
+	{
+	"entityID" : 6,
+	"name" : "spider",
+	"render": true
+	},
+	{
+	"entityID" : 7,
+	"name" : "crow",
+	"render" : true
 	}
-
 ]
