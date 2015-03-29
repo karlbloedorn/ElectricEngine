@@ -40,6 +40,7 @@
     <ClInclude Include="..\..\src\Graphics\tiny_obj_loader.hpp" />
     <ClInclude Include="..\..\src\Scene\Entity.hpp" />
     <ClInclude Include="..\..\src\Scene\Assets.hpp" />
+    <ClInclude Include="..\..\src\Scene\World.hpp" />
     <ClInclude Include="..\..\src\Scene\Player.hpp" />
     <ClInclude Include="..\..\src\Scene\StaticProp.hpp" />
   </ItemGroup>

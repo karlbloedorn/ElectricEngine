@@ -2,6 +2,7 @@
 #include "Graphics/Rendering.hpp"
 #include "Audio/Sound.hpp"
 #include "Controls.hpp"
+#include "Scene/World.hpp"
 
 Controls * controls;
 Assets * assets;
@@ -13,8 +14,11 @@ map<int, Entity *> entityMap;
 map<int, StaticProp *> staticPropMap;
 glm::vec3 playerPosition = glm::vec3(440, 50, 420);
 
-float playerSpeed = 20.0f;
+float playerSpeed =100.0f;
 float gametime = 0;
+World * world;
+const float heightMultiplier = 25;
+
 //testing
 StaticProp * bird;
 
@@ -22,10 +26,11 @@ int main(int argc, char * argv[]){
 	string assetPath = "../../assets/";
 	string initError;
 	SDL_Init(SDL_INIT_EVERYTHING);
+	world = new World();
 	rendering = new Rendering();
 	controls = new Controls();
 
-	bool initRenderingSuccess = rendering->Initialize(initError, 1080, 1920, false, assetPath);
+	bool initRenderingSuccess = rendering->Initialize(initError, 1080, 1920, false, assetPath, world);
 	bool initSuccess = initRenderingSuccess;
 	if (!initSuccess){
 		cout << initError << endl;
@@ -96,6 +101,38 @@ int main(int argc, char * argv[]){
 
 	return 0;
 }
+
+
+float groundHeightAtPosition(float x, float z){
+	return (world->heightMap[ ((int)x) * world->outWidth + ((int)z) * 4 + 0] / 255.0) * heightMultiplier;
+
+	//http://en.wikipedia.org/wiki/File:Bilinear_interpolation_visualisation.svg
+	int x1 = (int)playerPosition.x;
+	int z1 = (int)playerPosition.z;
+	int x2 = (int)playerPosition.x + 1;
+	int z2 = (int)playerPosition.z + 1;
+	auto greenDotVal = (world->heightMap[x1 * world->outWidth + z1 * 4 + 0] / 255.0) * heightMultiplier;
+	auto yellowDotVal = (world->heightMap[x1 * world->outWidth + z2 * 4 + 0] / 255.0) * heightMultiplier;
+	auto pinkDotVal = (world->heightMap[x2 * world->outWidth + z1 * 4 + 0] / 255.0) * heightMultiplier;
+	auto purpleDotVal = (world->heightMap[x2 * world->outWidth + z2 * 4 + 0] / 255.0) * heightMultiplier;
+
+	auto xLeftSection = x - x1;
+	auto xRightSection = x2 - x;
+	auto yTopSection = z2 - z;
+	auto yBottomSection = z - z1;
+
+	auto pinkRect = yTopSection  * xLeftSection;
+	auto greenRect = yTopSection * xRightSection;
+	auto purpleRect = yBottomSection * xLeftSection;
+	auto yellowRect = yBottomSection * xRightSection;
+
+	return pinkDotVal  * pinkRect +
+		yellowDotVal * yellowRect +
+		greenDotVal * greenRect +
+		purpleDotVal  * purpleRect;
+}
+
+
 void gameloop(){
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_SetRelativeMouseMode(SDL_bool::SDL_TRUE);
@@ -121,19 +158,20 @@ void gameloop(){
 		bool zOkay = true;
 		playerPosition += glm::vec3(xOkay ? movement.x : 0, yOkay ? movement.y : 0, zOkay ? movement.z : 0);
 
+		//auto groundHeight = groundHeightAtPosition(playerPosition.x, playerPosition.z);
+		//playerPosition.y = groundHeight;
+
 		auto xCamRotate = glm::rotate(controls->cameraRotation.x, glm::vec3(0, 1, 0));
 		auto yCamRotate = glm::rotate(controls->cameraRotation.y, glm::vec3(1, 0, 0));
 		auto bothRotate = xCamRotate * yCamRotate;
 		auto lookVector = bothRotate * glm::vec4(0, 0, 1, 0);
-		auto cameraPosition = playerPosition + glm::vec3(0, 12, 0);
+		auto cameraPosition = playerPosition + glm::vec3(0, 6, 0);
 		auto upVector = glm::vec3(0.0, 1.0, 0.0);
 		auto lookat = glm::lookAt(cameraPosition, glm::vec3(lookVector) + cameraPosition, upVector);
 		rendering->lookAt = lookat;
 		rendering->cameraPosition = cameraPosition;
 		rendering->skyboxRotation += delta*0.006;
-
 		rendering->RenderGame(&renderMap, &staticPropMap);
-		
 
 		//bird testing
 		float radius = 60+ sin(gametime / 5) * 10;
@@ -145,4 +183,6 @@ void gameloop(){
 		bird->Yrotation = -theta;
 		sound->Update(cameraPosition,  glm::vec3(lookVector* -1.0f), upVector, bird->position);
 	}
+
+
 }

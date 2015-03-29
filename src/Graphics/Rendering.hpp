@@ -18,6 +18,7 @@
 #include "Skybox.hpp"
 #include "../Scene/Entity.hpp"
 #include "../Scene/StaticProp.hpp"
+#include "../Scene/World.hpp"
 
 using namespace std;
 using namespace gl33core;
@@ -37,7 +38,7 @@ private:
 	Shader * terrainShader;
 public:
 	Rendering();
-	bool Initialize(string & error, int windowHeight, int windowWidth, bool fullScreen, string assetPath);
+	bool Initialize(string & error, int windowHeight, int windowWidth, bool fullScreen, string assetPath, World * world);
 	void RenderText(string text, TTF_Font * font, SDL_Color color, int x, int y);
 	bool AddEntity(Entity * entity, string assetPath);
 	void ShowLoading(float progress);

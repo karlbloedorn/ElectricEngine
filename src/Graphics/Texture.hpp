@@ -9,5 +9,5 @@ class Texture {
 
 public:
 	Texture();
-	static void SetupTexture(GLuint texture, string filePath, bool allowWrap);
+	static void SetupTexture(GLuint texture, string filePath, bool allowWrap, bool filtering, uint8_t ** output, int * outHeight, int * outWidth);
 };

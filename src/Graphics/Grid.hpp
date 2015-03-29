@@ -10,7 +10,7 @@
 #include "Texture.hpp"
 #include "Geometry.hpp"
 #include "../Scene/StaticProp.hpp"
-
+#include "../Scene/World.hpp"
 
 using namespace std;
 
@@ -18,7 +18,7 @@ class Grid {
 public:
 	Grid();
 	Triangle2D * triangles;
-	bool Load(string assetsPath);
+	bool Load(string assetsPath, World * world);
 	int numTriangles;
 	void RenderInstances(Shader * shader, glm::vec3 cameraPosition);
 	GLuint vbo;

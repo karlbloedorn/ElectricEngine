@@ -29,7 +29,7 @@ bool Mesh::LoadFromObj(string basePath, string filePath, string forceTexture){
 	}
 
 	glGenTextures(1, &texture);
-	Texture::SetupTexture(texture, basePath + textureFile, true);
+	Texture::SetupTexture(texture, basePath + textureFile, true, true, NULL, NULL, NULL);
 
 	tinyobj::shape_t shape;
 	if (shapes.size() > 1){

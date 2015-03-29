@@ -2,7 +2,7 @@
 
 Rendering::Rendering(){}
 
-bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bool fullScreen, string assetPath){
+bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bool fullScreen, string assetPath, World * world){
 
 	this->windowHeight = windowHeight;
 	this->windowWidth = windowWidth;
@@ -59,7 +59,7 @@ bool Rendering::Initialize(string & error, int windowHeight, int windowWidth, bo
 	this->skybox = new Skybox();
 	this->skybox->Load(assetPath);
 	this->grid = new Grid();
-	this->grid->Load(assetPath);
+	this->grid->Load(assetPath, world);
 
 	this->rawTextureShader = new Shader();
 	this->rawTextureShader->SetupShader(assetPath + "shaders/rawTexture.vert", assetPath + "shaders/rawTexture.frag",
@@ -190,7 +190,7 @@ void Rendering::RenderGame(map<int, vector<int>> * renderMap, map<int, StaticPro
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	auto perspective = glm::perspectiveFov<float>(1.27, windowWidth, windowHeight, 0.1f, 5000.0f);
+	auto perspective = glm::perspectiveFov<float>(1.27, windowWidth, windowHeight, 0.1f, 10000.0f);
 
 	// Skybox rendering
 	this->rawTextureShader->EnableShader();

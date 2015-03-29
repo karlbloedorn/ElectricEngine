@@ -7,12 +7,12 @@ Skybox::Skybox()
 }
 bool Skybox::Load(std::string assetsPath){
 	glGenTextures(6, textures);
-	Texture::SetupTexture(textures[0], assetsPath + "textures/skybox/cloud/negx.jpg", false);
-	Texture::SetupTexture(textures[1], assetsPath + "textures/skybox/cloud/posy.jpg", false);
-	Texture::SetupTexture(textures[2], assetsPath + "textures/skybox/cloud/negz.jpg", false);
-	Texture::SetupTexture(textures[3], assetsPath + "textures/skybox/cloud/posx.jpg", false);
-	Texture::SetupTexture(textures[4], assetsPath + "textures/skybox/cloud/negy.jpg", false);
-	Texture::SetupTexture(textures[5], assetsPath + "textures/skybox/cloud/posz.jpg", false);
+	Texture::SetupTexture(textures[0], assetsPath + "textures/skybox/cloud/negx.jpg", false, true, NULL, NULL, NULL);
+	Texture::SetupTexture(textures[1], assetsPath + "textures/skybox/cloud/posy.jpg", false, true, NULL, NULL, NULL);
+	Texture::SetupTexture(textures[2], assetsPath + "textures/skybox/cloud/negz.jpg", false, true, NULL, NULL, NULL);
+	Texture::SetupTexture(textures[3], assetsPath + "textures/skybox/cloud/posx.jpg", false, true, NULL, NULL, NULL);
+	Texture::SetupTexture(textures[4], assetsPath + "textures/skybox/cloud/negy.jpg", false, true, NULL, NULL, NULL);
+	Texture::SetupTexture(textures[5], assetsPath + "textures/skybox/cloud/posz.jpg", false, true, NULL, NULL, NULL);
 
 	numTriangles = 12;
 
